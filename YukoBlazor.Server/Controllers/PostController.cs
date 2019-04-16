@@ -207,7 +207,7 @@ namespace YukoBlazor.Server.Controllers
             return Json(post.Id);
         }
 
-        private string TruncateContent(string content)
+        internal static string TruncateContent(string content)
         {
             var summary = new StringBuilder();
 
