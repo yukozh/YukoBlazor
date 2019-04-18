@@ -10,6 +10,13 @@ namespace YukoBlazor.Server.Controllers
 {
     public class HomeController : Controller
     {
+        internal const string ServiceOkText = "API Server is running";
+
+        public IActionResult Index()
+        {
+            return Content(ServiceOkText);
+        }
+
         [HttpGet("api/Tag")]
         public async Task<IActionResult> GetTag(
             [FromServices] BlogContext db, 

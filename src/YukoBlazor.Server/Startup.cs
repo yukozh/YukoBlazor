@@ -3,11 +3,10 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Newtonsoft.Json.Serialization;
+using Microsoft.EntityFrameworkCore;
+using YukoBlazor.Server.Models;
 using System.Linq;
-using System.Runtime.CompilerServices;
 
-[assembly: InternalsVisibleTo("YukoBlazor.Server.Tests")]
 namespace YukoBlazor.Server
 {
     public class Startup
@@ -15,6 +14,7 @@ namespace YukoBlazor.Server
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc().AddNewtonsoftJson();
+            services.AddDbContext<BlogContext>(x => x.UseSqlite($"Data source={Program.DbPath}"));
             services.AddResponseCompression(opts =>
             {
                 opts.MimeTypes = ResponseCompressionDefaults.MimeTypes.Concat(
@@ -22,7 +22,7 @@ namespace YukoBlazor.Server
             });
         }
 
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public async void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             app.UseResponseCompression();
 
@@ -32,12 +32,11 @@ namespace YukoBlazor.Server
                 app.UseBlazorDebugging();
             }
 
-            app.UseMvc(routes =>
-            {
-                routes.MapRoute(name: "default", template: "{controller}/{action}/{id?}");
-            });
+            app.UseMvcWithDefaultRoute();
 
             app.UseBlazor<Client.Startup>();
+
+            await SampleData.InitializeYuukoBlog(app.ApplicationServices);
         }
     }
 }
