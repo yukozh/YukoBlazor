@@ -1,11 +1,12 @@
+using System.Linq;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.EntityFrameworkCore;
+using YukoBlazor.Server.Authentication;
 using YukoBlazor.Server.Models;
-using System.Linq;
 
 namespace YukoBlazor.Server
 {
@@ -20,6 +21,8 @@ namespace YukoBlazor.Server
                 opts.MimeTypes = ResponseCompressionDefaults.MimeTypes.Concat(
                     new[] { "application/octet-stream" });
             });
+            services.AddAuthentication(x => x.DefaultScheme = YukoTokenHandler.Scheme)
+                .AddYukoToken();
         }
 
         public async void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -32,11 +35,14 @@ namespace YukoBlazor.Server
                 app.UseBlazorDebugging();
             }
 
+            app.UseAuthentication();
             app.UseMvcWithDefaultRoute();
-
             app.UseBlazor<Client.Startup>();
 
-            await SampleData.InitializeYuukoBlog(app.ApplicationServices);
+            using (var serviceScope = app.ApplicationServices.CreateScope())
+            {
+                await SampleData.InitializeYuukoBlog(serviceScope.ServiceProvider);
+            }
         }
     }
 }

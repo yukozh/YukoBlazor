@@ -10,18 +10,18 @@ using Xunit;
 
 namespace YukoBlazor.Server.Tests
 {
-    public class CreateDbTest : IDisposable
+    public abstract class WebApiTestBase : IDisposable
     {
-        private IWebHost host;
+        protected IWebHost host;
         private const string bind = "http://localhost:35543";
-        private static readonly string dbPath = Path.Combine(Directory.GetCurrentDirectory(), "blog.db");
-        private static HttpClient client = new HttpClient
+        protected static readonly string dbPath = Path.Combine(Directory.GetCurrentDirectory(), "blog.db");
+        protected static HttpClient client = new HttpClient
         {
             BaseAddress = new Uri(bind),
             Timeout = new TimeSpan(0, 0, 3)
         };
 
-        public CreateDbTest()
+        public WebApiTestBase()
         {
             // Ensure there is no db file in test environment
             EnsureDbFileRemoved();
@@ -36,14 +36,9 @@ namespace YukoBlazor.Server.Tests
             WaitHostLaunchAsync(15).Wait();
         }
 
-        [Fact]
-        public void DbFileCreateTests()
-        {
-            Assert.True(File.Exists(dbPath));
-        }
-
         public void Dispose()
         {
+            host.Dispose();
             EnsureDbFileRemoved();
         }
 
@@ -67,7 +62,7 @@ namespace YukoBlazor.Server.Tests
 
                 try
                 {
-                    using (var response = await client.GetAsync("/"))
+                    using (var response = await client.GetAsync("/api/Hello"))
                     {
                         var text = await response.Content.ReadAsStringAsync();
                         if (text == HomeController.ServiceOkText)
@@ -84,6 +79,5 @@ namespace YukoBlazor.Server.Tests
                 await Task.Delay(1000);
             }
         }
-
     }
 }

@@ -11,10 +11,21 @@ namespace YukoBlazor.Server.Controllers
     public class HomeController : Controller
     {
         internal const string ServiceOkText = "API Server is running";
+        internal const string Authenticated = "Authenticated";
+        internal const string NotAuthenticated = "Not Authenticated";
 
+        [HttpGet("api/Hello")]
         public IActionResult Index()
         {
             return Content(ServiceOkText);
+        }
+
+        [HttpGet("api/State")]
+        public IActionResult State()
+        {
+            return User.Identity.IsAuthenticated 
+                ? Content(Authenticated) 
+                : Content(NotAuthenticated);
         }
 
         [HttpGet("api/Tag")]
