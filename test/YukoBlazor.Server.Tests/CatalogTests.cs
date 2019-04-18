@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Net;
@@ -17,7 +18,7 @@ namespace YukoBlazor.Server.Tests
         {
             // Arrange
             await CreateCatalogAsync("catalog-1", "Catalog #1");
-            await CreateCatalogAsync("catalog-2", "Catalog #2");
+            await CreateCatalogAsync("catalog-2", "Catalog #2", 1);
             await CreatePostAsync(
                 "test-post",
                 "Test Post",
@@ -28,15 +29,18 @@ namespace YukoBlazor.Server.Tests
             // Act
             using (var response = await Client.GetAsync("/api/Catalog"))
             {
-                // Assert #1
+                // Assert #1 : The API has no internal errors
                 Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
                 var json = await response.Content.ReadAsStringAsync();
                 var obj = JsonConvert.DeserializeObject<IEnumerable<CatalogViewModel>>(json);
 
-                // Assert #2
+                // Assert #2 : The post count of catalog is correct
                 Assert.Contains(obj, x => x.Id == "catalog-1" && x.Count == 1);
                 Assert.Contains(obj, x => x.Id == "catalog-2" && x.Count == 0);
+
+                // Assert #3 : The catalog returned in order
+                Assert.True(obj.First().Id == "catalog-2");
             }
         }
 
@@ -110,7 +114,7 @@ namespace YukoBlazor.Server.Tests
             // Arrange
             await CreateCatalogAsync("catalog-1", "Catalog #1");
 
-            // Act
+            // Act #1 : Modify display text
             await ModifyCatalogAsync("catalog-1", "#1");
 
             using (var conn = new SqliteConnection($"Data source={DbPath}"))
@@ -120,8 +124,31 @@ namespace YukoBlazor.Server.Tests
                     "SELECT \"Display\" FROM \"Catalogs\" WHERE \"Id\" = 'catalog-1'", 
                     conn))
                 {
-                    // Assert
+                    // Assert #1.1 : Validate the display text
                     Assert.Equal("#1", (string)await cmd.ExecuteScalarAsync());
+                }
+
+                using (var cmd = new SqliteCommand(
+                    "SELECT \"Priority\" FROM \"Catalogs\" WHERE \"Id\" = 'catalog-1'",
+                    conn))
+                {
+                    // Assert #1.2 : Validate the priority is not modified
+                    Assert.Equal(0, (long)await cmd.ExecuteScalarAsync());
+                }
+            }
+
+            // Act  #2 : Modify priority
+            await ModifyCatalogAsync("catalog-1", priority: 1);
+
+            using (var conn = new SqliteConnection($"Data source={DbPath}"))
+            {
+                await conn.OpenAsync();
+                using (var cmd = new SqliteCommand(
+                    "SELECT \"Priority\" FROM \"Catalogs\" WHERE \"Id\" = 'catalog-1'",
+                    conn))
+                {
+                    // Assert #2 : Validate the priority
+                    Assert.Equal(1, (long)await cmd.ExecuteScalarAsync());
                 }
             }
         }

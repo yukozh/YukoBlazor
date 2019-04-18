@@ -89,11 +89,12 @@ namespace YukoBlazor.Server.Tests
 
         #region Manage Catalog
         protected async Task CreateCatalogAsync(
-            string url, string text, CancellationToken token = default)
+            string url, string text, int priority = 0, CancellationToken token = default)
         {
             var content = new FormUrlEncodedContent(new Dictionary<string, string>
             {
-                { "display", text }
+                { "display", text },
+                { "priority", priority.ToString() }
             });
 
             using (var response = await Client.PostAsync(
@@ -110,12 +111,22 @@ namespace YukoBlazor.Server.Tests
         }
 
         protected async Task ModifyCatalogAsync(
-            string url, string text, CancellationToken token = default)
+            string url, string text = null, int? priority = null, 
+            CancellationToken token = default)
         {
-            var content = new FormUrlEncodedContent(new Dictionary<string, string>
+            var dictionary = new Dictionary<string, string>();
+
+            if (!string.IsNullOrEmpty(text))
             {
-                { "display", text }
-            });
+                dictionary.Add("display", text);
+            }
+
+            if (priority.HasValue)
+            {
+                dictionary.Add("priority", priority.ToString());
+            }
+
+            var content = new FormUrlEncodedContent(dictionary);
 
             using (var response = await Client.PatchAsync(
                 $"/api/Catalog/{url}?usr=root&pwd=123456",
