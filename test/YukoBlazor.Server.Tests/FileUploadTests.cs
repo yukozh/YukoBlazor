@@ -41,29 +41,6 @@ namespace YukoBlazor.Server.Tests
         }
 
         [Fact]
-        public async Task GuestUploadExceedsLimitationViaBase64StringTest()
-        {
-            // Arrange
-            const string header = "data:image/png;base64,";
-            var stringBuilder = new StringBuilder(header);
-            for (var i = 0; i < FileController.GuestLimit - header.Length + 1; ++i)
-            {
-                stringBuilder.Append('A');
-            }
-            var content = new FormUrlEncodedContent(new Dictionary<string, string>
-            {
-                { "base64", stringBuilder.ToString() }
-            });
-
-            // Act
-            using (var response = await Client.PostAsync("/api/File", content))
-            {
-                //Assert
-                Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
-            }
-        }
-
-        [Fact]
         public async Task GuestUploadSuccessWithFormFileTest()
         {
             // Arrange
