@@ -16,7 +16,9 @@ namespace YukoBlazor.Server.Tests
         private static readonly Random random = new Random();
 
         protected readonly IWebHost Host;
-        protected readonly string DbPath;
+        protected readonly static string DbPath = Path.Combine(
+                Directory.GetCurrentDirectory(),
+                $"blog.db");
         protected static HttpClient Client = new HttpClient
         {
             BaseAddress = new Uri(bind),
@@ -25,13 +27,6 @@ namespace YukoBlazor.Server.Tests
 
         public WebApiTestBase()
         {
-            lock (Client)
-            {
-                DbPath = Path.Combine(
-                    Directory.GetCurrentDirectory(), 
-                    $"blog.db");
-            }
-
             // Ensure there is no db file in test environment
             EnsureDbFileRemoved();
 
