@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Net;
+using System.Net.Http;
 using Microsoft.Data.Sqlite;
 using Newtonsoft.Json;
 using YukoBlazor.Shared;
@@ -158,6 +159,59 @@ namespace YukoBlazor.Server.Tests
             // Assert
             await Assert.ThrowsAsync<InvalidOperationException>(
                 () => ModifyCatalogAsync("catalog-1", "Catalog #1"));
+        }
+
+        [Fact]
+        public async Task GuestRemoveCatalogTest()
+        {
+            // Arrange
+            await CreateCatalogAsync("catalog-1", "Catalog #1");
+
+            // Act
+            using (var response = await Client.DeleteAsync(
+                $"/api/Catalog/catalog-1"))
+            {
+                // Assert
+                Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
+            }
+        }
+
+        [Fact]
+        public async Task GuestPatchCatalogTest()
+        {
+            // Arrange
+            await CreateCatalogAsync("catalog-1", "Catalog #1");
+            var content = new FormUrlEncodedContent(new Dictionary<string, string>());
+
+            // Act
+            using (var response = await Client.PatchAsync(
+                $"/api/Catalog/catalog-1", content))
+            {
+                // Assert
+                Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
+            }
+        }
+
+        [Fact]
+        public async Task GuestPutCatalogTest()
+        {
+            // Arrange
+            var content = new FormUrlEncodedContent(new Dictionary<string, string>());
+
+            // Act
+            using (var response = await Client.PutAsync(
+                $"/api/Catalog/catalog-1", content))
+            {
+                // Assert
+                Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
+            }
+        }
+
+        [Fact]
+        public async Task PutInvalidUrlTest()
+        {
+            await Assert.ThrowsAsync<InvalidOperationException>(
+                () => CreateCatalogAsync("catalog-1", ""));
         }
 
         private async Task<long> LongCountCatalogsAsync(CancellationToken token = default)

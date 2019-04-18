@@ -23,11 +23,10 @@ namespace YukoBlazor.Server.Controllers
                 return Json("Not Authroized");
             }
 
-            if (string.IsNullOrWhiteSpace(url)
-                || string.IsNullOrWhiteSpace(display))
+            if (string.IsNullOrWhiteSpace(display))
             {
                 Response.StatusCode = 400;
-                return Json("Url or Display could not be null or whitespace");
+                return Json("Display could not be null or whitespace");
             }
 
             if (await db.Catalogs.AnyAsync(x => x.Id == url, token))

@@ -18,8 +18,8 @@ namespace YukoBlazor.Shared
         public string Summary { get; set; }
 
         public string Content { get; set; }
-        
-        public DateTime Time { get; set; }
+
+        public DateTime Time { get; set; } = DateTime.UtcNow;
 
         public bool IsPage { get; set; }
 

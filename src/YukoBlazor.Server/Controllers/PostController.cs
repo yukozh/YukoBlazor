@@ -88,6 +88,7 @@ namespace YukoBlazor.Server.Controllers
 
             if (post == null)
             {
+                Response.StatusCode = 404;
                 return Json(null);
             }
             else
@@ -172,7 +173,8 @@ namespace YukoBlazor.Server.Controllers
             }
 
             if (!string.IsNullOrWhiteSpace(url) 
-                && await db.Posts.AnyAsync(x => x.Url == newUrl, token))
+                && await db.Posts.AnyAsync(x => x.Url == newUrl, token)
+                && url != newUrl)
             {
                 Response.StatusCode = 400;
                 return Json("New URL is already exist");
@@ -195,11 +197,10 @@ namespace YukoBlazor.Server.Controllers
                 return Json("Post is not exist");
             }
 
-            if (!string.IsNullOrEmpty(tags) 
+            if (tags != null
                 && post.Tags != null)
             {
                 db.RemoveRange(post.Tags);
-                tags = tags ?? ""; // Defense null value of tags
                 var tagsList = tags.Split(',')
                     .Select(x => x.Trim())
                     .Where(x => !string.IsNullOrEmpty(x))
