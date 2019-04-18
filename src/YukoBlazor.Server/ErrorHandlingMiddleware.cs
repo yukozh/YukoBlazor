@@ -31,7 +31,7 @@ namespace YukoBlazor.Server
             HttpContext context, Exception exception)
         {
             var code = HttpStatusCode.InternalServerError;
-            context.Response.ContentType = "application/text";
+            context.Response.ContentType = "application/json";
             context.Response.StatusCode = (int)code;
             return context.Response.WriteAsync(exception.ToString());
         }
