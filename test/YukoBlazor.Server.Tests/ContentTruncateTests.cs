@@ -59,5 +59,30 @@ namespace YukoBlazor.Server.Tests
             // Assert
             Assert.Equal(expected, truncated);
         }
+
+        [Fact]
+        public void TruncateCodeBlockTest()
+        {
+            // Arrange
+            var input = new StringBuilder();
+            input.AppendLine("```");
+            for (var i = 0; i < 9; ++i)
+            {
+                input.AppendLine("test");
+            }
+            var expected = new StringBuilder(input.ToString());
+            expected.AppendLine("```");
+            for (var i = 0; i < 9; ++i)
+            {
+                input.AppendLine("test");
+            }
+            input.AppendLine("```");
+
+            // Act
+            var truncated = PostController.TruncateContent(input.ToString());
+
+            // Assert
+            Assert.Equal(expected.ToString(), truncated);
+        }
     }
 }

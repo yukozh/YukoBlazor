@@ -13,9 +13,9 @@ namespace YukoBlazor.Server.Controllers
     [Route("api/[controller]")]
     public class FileController : Controller
     {
-        private const int GuestLimit = 1024 * 512;
+        internal const int GuestLimit = 1024 * 512;
 
-        [HttpGet]
+        [HttpGet("{id:Guid}")]
         public async Task<IActionResult> Get(
             [FromServices] BlogContext db, Guid id,
             CancellationToken token = default)
@@ -25,6 +25,7 @@ namespace YukoBlazor.Server.Controllers
 
             if (file == null)
             {
+                Response.StatusCode = 404;
                 return File(new byte[] { }, "application/octet-stream");
             }
 

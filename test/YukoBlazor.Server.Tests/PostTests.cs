@@ -47,11 +47,34 @@ namespace YukoBlazor.Server.Tests
         }
 
         [Fact]
+        public async Task CreatePostConflictTest()
+        {
+            // Arrange
+            const string postUrl = "test-post";
+            var guid = await CreatePostAsync(
+                postUrl,
+                "Test Post",
+                "### Hello World",
+                "A, B, C",
+                null);
+
+            // Assert
+            await Assert.ThrowsAsync<InvalidOperationException>(
+                () => CreatePostAsync(
+                    postUrl,
+                    "Test Post",
+                    "### Hello World",
+                    "A, B, C",
+                    null));
+
+        }
+
+        [Fact]
         public async Task CreatePostWithNonExistedCatalogTest()
         {
             // Assert
             await Assert.ThrowsAsync<InvalidOperationException>(
-                async () => await CreatePostAsync(
+                () => CreatePostAsync(
                     "test-post",
                     "Test Post",
                     "### Hello World",
