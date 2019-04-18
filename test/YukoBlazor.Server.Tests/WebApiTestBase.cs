@@ -83,5 +83,10 @@ namespace YukoBlazor.Server.Tests
                 await Task.Delay(1000);
             }
         }
+
+        protected void CreateCatalog(string url, string text)
+        {
+
+        }
     }
 }

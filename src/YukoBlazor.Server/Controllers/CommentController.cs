@@ -51,5 +51,30 @@ namespace YukoBlazor.Server.Controllers
 
             return Json(true);
         }
+
+        [HttpDelete("{id:Guid}")]
+        public async Task<IActionResult> Delete(
+            [FromServices] BlogContext db, Guid id,
+            CancellationToken token = default)
+        {
+            if (!User.Identity.IsAuthenticated)
+            {
+                Response.StatusCode = 403;
+                return Json("Not Authroized");
+            }
+
+            var comment = await db.Comments
+                .SingleOrDefaultAsync(x => x.Id == id, token);
+
+            if (comment == null)
+            {
+                Response.StatusCode = 404;
+                return Json($"The comment {id} is not found");
+            }
+
+            db.Comments.Remove(comment);
+            await db.SaveChangesAsync(token);
+            return Json(true);
+        }
     }
 }

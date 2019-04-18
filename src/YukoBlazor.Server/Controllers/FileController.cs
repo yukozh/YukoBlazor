@@ -67,6 +67,8 @@ namespace YukoBlazor.Server.Controllers
             }
             else if (base64 != null)
             {
+                // TODO: Validate base 64 string format and return 4xx to client if it is invalid.
+
                 if (!User.Identity.IsAuthenticated && base64.Length > GuestLimit)
                 {
                     Response.StatusCode = 400;
