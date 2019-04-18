@@ -107,7 +107,6 @@ namespace YukoBlazor.Server.Tests
                 () => DeleteCatalogAsync("catalog-1"));
         }
 
-
         [Fact]
         public async Task PatchExistedCatalogTest()
         {

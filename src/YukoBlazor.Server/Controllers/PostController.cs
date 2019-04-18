@@ -115,16 +115,20 @@ namespace YukoBlazor.Server.Controllers
         {
             if (!User.Identity.IsAuthenticated)
             {
+                Response.StatusCode = 403;
                 return Json("Not Authorized");
             }
 
             if (await db.Posts.AnyAsync(x => x.Url == url, token))
             {
+                Response.StatusCode = 400;
                 return Json("URL is already exist");
             }
 
-            if (!await db.Catalogs.AnyAsync(x => x.Id == catalog, token))
+            if (!string.IsNullOrEmpty(catalog) 
+                && !await db.Catalogs.AnyAsync(x => x.Id == catalog, token))
             {
+                Response.StatusCode = 400;
                 return Json("Catalog is not exist");
             }
 

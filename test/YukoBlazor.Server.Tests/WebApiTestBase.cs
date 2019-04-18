@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Net;
 using System.Net.Http;
 using Microsoft.AspNetCore.Hosting;
+using Newtonsoft.Json;
 using YukoBlazor.Server.Controllers;
 using Xunit;
 
@@ -158,7 +159,7 @@ namespace YukoBlazor.Server.Tests
         #endregion
 
         #region Manage Post
-        protected async Task CreatePostAsync(
+        protected async Task<Guid> CreatePostAsync(
             string url, string title, string content,
             string tags, string catalog, bool isPage = false,
             CancellationToken token = default)
@@ -181,6 +182,11 @@ namespace YukoBlazor.Server.Tests
                 {
                     var error = await response.Content.ReadAsStringAsync();
                     throw new InvalidOperationException(error);
+                }
+                else
+                {
+                    return JsonConvert.DeserializeObject<Guid>(
+                        await response.Content.ReadAsStringAsync());
                 }
             }
         }
