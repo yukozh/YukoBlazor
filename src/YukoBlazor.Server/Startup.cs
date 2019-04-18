@@ -29,9 +29,9 @@ namespace YukoBlazor.Server
         {
             app.UseResponseCompression();
 
+            app.UseErrorHandlingMiddleware();
             if (env.IsDevelopment())
             {
-                app.UseDeveloperExceptionPage();
                 app.UseBlazorDebugging();
             }
 

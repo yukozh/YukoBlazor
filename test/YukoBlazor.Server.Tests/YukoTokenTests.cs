@@ -9,7 +9,7 @@ namespace YukoBlazor.Server.Tests
         [Fact]
         public async Task NotAuthenticatedTest()
         {
-            using (var resposne = await client.GetAsync("/api/State"))
+            using (var resposne = await Client.GetAsync("/api/State"))
             {
                 var text = await resposne.Content.ReadAsStringAsync();
                 Assert.Equal(HomeController.NotAuthenticated, text);
@@ -22,7 +22,7 @@ namespace YukoBlazor.Server.Tests
         [InlineData("wrong", "654321")]
         public async Task AuthenticateFailedWithQueryStringTest(string usr, string pwd)
         {
-            using (var resposne = await client.GetAsync($"/api/State?usr={usr}&pwd={pwd}"))
+            using (var resposne = await Client.GetAsync($"/api/State?usr={usr}&pwd={pwd}"))
             {
                 var text = await resposne.Content.ReadAsStringAsync();
                 Assert.Equal(HomeController.NotAuthenticated, text);
@@ -35,10 +35,10 @@ namespace YukoBlazor.Server.Tests
         [InlineData("wrong", "654321")]
         public async Task AuthenticateFailedWithHeaderTest(string usr, string pwd)
         {
-            client.DefaultRequestHeaders.Add("Authorization", $"Yuko {usr} {pwd}");
+            Client.DefaultRequestHeaders.Add("Authorization", $"Yuko {usr} {pwd}");
             try
             {
-                using (var resposne = await client.GetAsync("/api/State"))
+                using (var resposne = await Client.GetAsync("/api/State"))
                 {
                     var text = await resposne.Content.ReadAsStringAsync();
                     Assert.Equal(HomeController.NotAuthenticated, text);
@@ -46,14 +46,14 @@ namespace YukoBlazor.Server.Tests
             }
             finally
             {
-                client.DefaultRequestHeaders.Remove("Authorization");
+                Client.DefaultRequestHeaders.Remove("Authorization");
             }
         }
 
         [Fact]
         public async Task AuthenticateSuccessWithQueryStringTest()
         {
-            using (var resposne = await client.GetAsync("/api/State?usr=root&pwd=123456"))
+            using (var resposne = await Client.GetAsync("/api/State?usr=root&pwd=123456"))
             {
                 var text = await resposne.Content.ReadAsStringAsync();
                 Assert.Equal(HomeController.Authenticated, text);
@@ -63,10 +63,10 @@ namespace YukoBlazor.Server.Tests
         [Fact]
         public async Task AuthenticateSuccessWithHeaderTest()
         {
-            client.DefaultRequestHeaders.Add("Authorization", $"Yuko root 123456");
+            Client.DefaultRequestHeaders.Add("Authorization", $"Yuko root 123456");
             try
             {
-                using (var resposne = await client.GetAsync("/api/State"))
+                using (var resposne = await Client.GetAsync("/api/State"))
                 {
                     var text = await resposne.Content.ReadAsStringAsync();
                     Assert.Equal(HomeController.Authenticated, text);
@@ -74,7 +74,7 @@ namespace YukoBlazor.Server.Tests
             }
             finally
             {
-                client.DefaultRequestHeaders.Remove("Authorization");
+                Client.DefaultRequestHeaders.Remove("Authorization");
             }
         }
     }

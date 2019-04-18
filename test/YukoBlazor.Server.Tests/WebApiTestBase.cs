@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using System.IO;
 using System.Threading.Tasks;
 using System.Net.Http;
@@ -8,14 +6,18 @@ using Microsoft.AspNetCore.Hosting;
 using YukoBlazor.Server.Controllers;
 using Xunit;
 
+[assembly: CollectionBehavior(DisableTestParallelization = true)]
+
 namespace YukoBlazor.Server.Tests
 {
     public abstract class WebApiTestBase : IDisposable
     {
-        protected IWebHost host;
         private const string bind = "http://localhost:35543";
-        protected static readonly string dbPath = Path.Combine(Directory.GetCurrentDirectory(), "blog.db");
-        protected static HttpClient client = new HttpClient
+        private static readonly Random random = new Random();
+
+        protected readonly IWebHost Host;
+        protected readonly string DbPath;
+        protected static HttpClient Client = new HttpClient
         {
             BaseAddress = new Uri(bind),
             Timeout = new TimeSpan(0, 0, 3)
@@ -23,14 +25,21 @@ namespace YukoBlazor.Server.Tests
 
         public WebApiTestBase()
         {
+            lock (Client)
+            {
+                DbPath = Path.Combine(
+                    Directory.GetCurrentDirectory(), 
+                    $"blog.db");
+            }
+
             // Ensure there is no db file in test environment
             EnsureDbFileRemoved();
 
             // Build host
-            host = Program.BuildWebHost(new[] { "-url", bind, "-db", dbPath });
+            Host = Program.BuildWebHost(new[] { "-url", bind, "-db", DbPath });
 
             // Run host
-            host.StartAsync();
+            Host.StartAsync();
 
             // Wait for API server ready
             WaitHostLaunchAsync(15).Wait();
@@ -38,15 +47,15 @@ namespace YukoBlazor.Server.Tests
 
         public void Dispose()
         {
-            host.Dispose();
+            Host.Dispose();
             EnsureDbFileRemoved();
         }
 
         private void EnsureDbFileRemoved()
         {
-            if (File.Exists(dbPath))
+            if (File.Exists(DbPath))
             {
-                File.Delete(dbPath);
+                File.Delete(DbPath);
             }
         }
 
@@ -62,7 +71,7 @@ namespace YukoBlazor.Server.Tests
 
                 try
                 {
-                    using (var response = await client.GetAsync("/api/Hello"))
+                    using (var response = await Client.GetAsync("/api/Hello"))
                     {
                         var text = await response.Content.ReadAsStringAsync();
                         if (text == HomeController.ServiceOkText)
