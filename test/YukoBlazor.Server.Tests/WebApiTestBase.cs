@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Threading;
 using System.Threading.Tasks;
+using System.Net;
 using System.Net.Http;
 using Microsoft.AspNetCore.Hosting;
 using YukoBlazor.Server.Controllers;
@@ -54,6 +57,7 @@ namespace YukoBlazor.Server.Tests
             }
         }
 
+        #region Manage Catalog
         private async Task<bool> WaitHostLaunchAsync(int seconds = -1)
         {
             var timeUsed = 0;
@@ -84,9 +88,62 @@ namespace YukoBlazor.Server.Tests
             }
         }
 
-        protected void CreateCatalog(string url, string text)
+        protected async Task CreateCatalogAsync(
+            string url, string text, CancellationToken token = default)
         {
+            var content = new FormUrlEncodedContent(new Dictionary<string, string>
+            {
+                { "display", text }
+            });
 
+            using (var response = await Client.PostAsync(
+                $"/api/Catalog/{url}?usr=root&pwd=123456", 
+                content,
+                token))
+            {
+                if (response.StatusCode != HttpStatusCode.OK)
+                {
+                    var error = await response.Content.ReadAsStringAsync();
+                    throw new InvalidOperationException(error);
+                }
+            }
         }
+
+        protected async Task ModifyCatalogAsync(
+            string url, string text, CancellationToken token = default)
+        {
+            var content = new FormUrlEncodedContent(new Dictionary<string, string>
+            {
+                { "display", text }
+            });
+
+            using (var response = await Client.PatchAsync(
+                $"/api/Catalog/{url}?usr=root&pwd=123456",
+                content,
+                token))
+            {
+                if (response.StatusCode != HttpStatusCode.OK)
+                {
+                    var error = await response.Content.ReadAsStringAsync();
+                    throw new InvalidOperationException(error);
+                }
+            }
+        }
+
+        protected async Task DeleteCatalogAsync(
+            string url, CancellationToken token = default)
+        {
+            using (var response = await Client.DeleteAsync(
+                $"/api/Catalog/{url}?usr=root&pwd=123456",
+                token))
+            {
+                if (response.StatusCode != HttpStatusCode.OK)
+                {
+                    var error = await response.Content.ReadAsStringAsync();
+                    throw new InvalidOperationException(error);
+                }
+            }
+        }
+        #endregion
     }
 }

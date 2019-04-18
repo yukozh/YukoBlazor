@@ -10,7 +10,7 @@ namespace YukoBlazor.Server.Tests
         [Fact]
         public void PutSingleCommentTest()
         {
-            Client.PostAsync();
+            //Client.PostAsync();
         }
     }
 }

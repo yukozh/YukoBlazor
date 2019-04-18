@@ -10,27 +10,38 @@ namespace YukoBlazor.Server.Tests
         [Fact]
         public void ContentLinesLowerThanLimitation()
         {
+            // Arrange
             var content = @"### Hello world";
+
+            // Act
             var truncated = PostController.TruncateContent(content);
+
+            // Assert
             Assert.Equal(content, truncated);
         }
 
         [Fact]
         public void ContentLinesEqualToLimitation()
         {
+            // Arrange
             var input = new StringBuilder();
             for (var i = 0; i < 10; ++i)
             {
                 input.AppendLine("test");
             }
             var expected = input.ToString();
+
+            // Act
             var truncated = PostController.TruncateContent(input.ToString());
+
+            // Assert
             Assert.Equal(expected, truncated);
         }
 
         [Fact]
         public void ContentLinesGreaterThanLimitation()
         {
+            // Arrange
             var input = new StringBuilder();
             for (var i = 0; i < 10; ++i)
             {
@@ -41,7 +52,11 @@ namespace YukoBlazor.Server.Tests
             {
                 input.AppendLine("exceed");
             }
+
+            // Act
             var truncated = PostController.TruncateContent(input.ToString());
+
+            // Assert
             Assert.Equal(expected, truncated);
         }
     }
