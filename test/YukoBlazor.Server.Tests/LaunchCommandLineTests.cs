@@ -10,6 +10,9 @@ namespace YukoBlazor.Server.Tests
         {
             Assert.Throws<IndexOutOfRangeException>(
                 () => Program.Main(new[] { "-db" }));
+
+            Assert.Throws<IndexOutOfRangeException>(
+                () => Program.Main(new[] { "-url" }));
         }
     }
 }
