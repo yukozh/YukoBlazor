@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.28809.33
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "YukoBlazor.Server", "YukoBlazor.Server\YukoBlazor.Server.csproj", "{549EAF3F-AF8D-43DE-A56F-B8E50E807A73}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "YukoBlazor.Server", "src\YukoBlazor.Server\YukoBlazor.Server.csproj", "{549EAF3F-AF8D-43DE-A56F-B8E50E807A73}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "YukoBlazor.Client", "YukoBlazor.Client\YukoBlazor.Client.csproj", "{2AE54ECE-AE12-4C11-AB07-6B7CDB1767AF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "YukoBlazor.Client", "src\YukoBlazor.Client\YukoBlazor.Client.csproj", "{2AE54ECE-AE12-4C11-AB07-6B7CDB1767AF}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "YukoBlazor.Shared", "YukoBlazor.Shared\YukoBlazor.Shared.csproj", "{BA7753E9-011D-4821-90C5-46E69C355B78}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "YukoBlazor.Shared", "src\YukoBlazor.Shared\YukoBlazor.Shared.csproj", "{BA7753E9-011D-4821-90C5-46E69C355B78}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{243830E8-443E-4188-B0C5-53030175E7BD}"
 EndProject
