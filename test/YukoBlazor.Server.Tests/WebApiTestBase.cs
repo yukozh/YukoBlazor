@@ -57,7 +57,6 @@ namespace YukoBlazor.Server.Tests
             }
         }
 
-        #region Manage Catalog
         private async Task<bool> WaitHostLaunchAsync(int seconds = -1)
         {
             var timeUsed = 0;
@@ -88,6 +87,7 @@ namespace YukoBlazor.Server.Tests
             }
         }
 
+        #region Manage Catalog
         protected async Task CreateCatalogAsync(
             string url, string text, CancellationToken token = default)
         {
@@ -135,6 +135,35 @@ namespace YukoBlazor.Server.Tests
         {
             using (var response = await Client.DeleteAsync(
                 $"/api/Catalog/{url}?usr=root&pwd=123456",
+                token))
+            {
+                if (response.StatusCode != HttpStatusCode.OK)
+                {
+                    var error = await response.Content.ReadAsStringAsync();
+                    throw new InvalidOperationException(error);
+                }
+            }
+        }
+        #endregion
+
+        #region Manage Post
+        protected async Task CreatePostAsync(
+            string url, string title, string content,
+            string tags, string catalog, bool isPage = false,
+            CancellationToken token = default)
+        {
+            var httpContent = new FormUrlEncodedContent(new Dictionary<string, string>
+            {
+                { "title", title },
+                { "content", content },
+                { "tags", tags },
+                { "catalog", catalog },
+                { "isPage", isPage ? "true" : "false" }
+            });
+
+            using (var response = await Client.PutAsync(
+                $"/api/Post/{url}?usr=root&pwd=123456",
+                httpContent,
                 token))
             {
                 if (response.StatusCode != HttpStatusCode.OK)
