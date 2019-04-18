@@ -190,6 +190,73 @@ namespace YukoBlazor.Server.Tests
                 }
             }
         }
+
+        protected async Task ModifyPostAsync(
+            string url, string newUrl = null, string title = null, string content = null,
+            string catalog = null, string tags = null, bool? isPage = false,
+            CancellationToken token = default)
+        {
+            var dictionary = new Dictionary<string, string>();
+
+            if (!string.IsNullOrEmpty(newUrl))
+            {
+                dictionary.Add("newUrl", newUrl);
+            }
+
+            if (!string.IsNullOrEmpty(title))
+            {
+                dictionary.Add("title", title);
+            }
+
+            if (!string.IsNullOrEmpty(content))
+            {
+                dictionary.Add("content", content);
+            }
+
+            if (!string.IsNullOrEmpty(catalog))
+            {
+                dictionary.Add("catalog", catalog);
+            }
+
+            if (!string.IsNullOrEmpty(tags))
+            {
+                dictionary.Add("tags", tags);
+            }
+
+            if (isPage.HasValue)
+            {
+                dictionary.Add("isPage", isPage.ToString());
+            }
+
+            var httpContent = new FormUrlEncodedContent(dictionary);
+
+            using (var response = await Client.PatchAsync(
+                $"/api/Post/{url}?usr=root&pwd=123456",
+                httpContent,
+                token))
+            {
+                if (response.StatusCode != HttpStatusCode.OK)
+                {
+                    var error = await response.Content.ReadAsStringAsync();
+                    throw new InvalidOperationException(error);
+                }
+            }
+        }
+
+        protected async Task DeletePostAsync(
+            string url, CancellationToken token = default)
+        {
+            using (var response = await Client.DeleteAsync(
+                $"/api/Post/{url}?usr=root&pwd=123456",
+                token))
+            {
+                if (response.StatusCode != HttpStatusCode.OK)
+                {
+                    var error = await response.Content.ReadAsStringAsync();
+                    throw new InvalidOperationException(error);
+                }
+            }
+        }
         #endregion
     }
 }

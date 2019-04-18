@@ -162,23 +162,94 @@ namespace YukoBlazor.Server.Controllers
         public async Task<IActionResult> Patch(
             [FromServices] BlogContext db, string content,
             string catalog, string title, string tags,
-            string url, string newUrl, bool isPage = false,
+            string url, string newUrl, bool? isPage = false,
             CancellationToken token = default)
         {
             if (!User.Identity.IsAuthenticated)
             {
+                Response.StatusCode = 403;
                 return Json("Not Authorized");
             }
 
             if (!string.IsNullOrWhiteSpace(url) 
                 && await db.Posts.AnyAsync(x => x.Url == newUrl, token))
             {
+                Response.StatusCode = 400;
                 return Json("New URL is already exist");
             }
 
-            if (!await db.Catalogs.AnyAsync(x => x.Id == catalog, token))
+            if (!string.IsNullOrWhiteSpace(catalog) 
+                && !await db.Catalogs.AnyAsync(x => x.Id == catalog, token))
             {
+                Response.StatusCode = 400;
                 return Json("Catalog is not exist");
+            }
+
+            var post = await db.Posts
+                .Include(x => x.Tags)
+                .SingleOrDefaultAsync(x => x.Url == url, token);
+
+            if (post == null)
+            {
+                Response.StatusCode = 404;
+                return Json("Post is not exist");
+            }
+
+            if (!string.IsNullOrEmpty(tags) 
+                && post.Tags != null)
+            {
+                db.RemoveRange(post.Tags);
+                tags = tags ?? ""; // Defense null value of tags
+                var tagsList = tags.Split(',')
+                    .Select(x => x.Trim())
+                    .Where(x => !string.IsNullOrEmpty(x))
+                    .Select(x => new PostTag
+                    {
+                        Tag = x
+                    })
+                    .ToList();
+                post.Tags = tagsList;
+            }
+
+            if (!string.IsNullOrEmpty(newUrl))
+            {
+                post.Url = newUrl;
+            }
+
+            if (!string.IsNullOrEmpty(catalog))
+            {
+                post.CatalogId = catalog;
+            }
+
+            if (!string.IsNullOrEmpty(content))
+            {
+                post.Content = content;
+                post.Summary = TruncateContent(content);
+            }
+
+            if (!string.IsNullOrEmpty(title))
+            {
+                post.Title = title;
+            }
+
+            if (isPage.HasValue)
+            {
+                post.IsPage = isPage.Value;
+            }
+
+            await db.SaveChangesAsync(token);
+            return Json(post.Id);
+        }
+
+        [HttpDelete("{url}")]
+        public async Task<IActionResult> Delete(
+            [FromServices] BlogContext db, string url,
+            CancellationToken token = default)
+        {
+            if (!User.Identity.IsAuthenticated)
+            {
+                Response.StatusCode = 403;
+                return Json("Not Authorized");
             }
 
             var post = await db.Posts
@@ -186,29 +257,13 @@ namespace YukoBlazor.Server.Controllers
 
             if (post == null)
             {
+                Response.StatusCode = 404;
                 return Json("Post is not exist");
             }
 
-            tags = tags ?? ""; // Defense null value of tags
-            var tagsList = tags.Split(',')
-                .Select(x => x.Trim())
-                .Where(x => !string.IsNullOrEmpty(x))
-                .Select(x => new PostTag
-                {
-                    Tag = x
-                })
-                .ToList();
-
-            post.Url = newUrl ?? url;
-            post.CatalogId = catalog;
-            post.Content = content;
-            post.IsPage = isPage;
-            post.Tags = tagsList;
-            post.Title = title;
-            post.Summary = TruncateContent(content);
-
+            db.Posts.Remove(post);
             await db.SaveChangesAsync(token);
-            return Json(post.Id);
+            return Json(true);
         }
 
         internal static string TruncateContent(string content)
