@@ -258,5 +258,53 @@ namespace YukoBlazor.Server.Tests
             }
         }
         #endregion
+
+        #region Manage Comment
+        protected async Task<Guid> CreateCommentAsync(
+            Guid id, string content, string name, string email, 
+            bool isRootComment = true, bool asAdmin = false, 
+            CancellationToken token = default)
+        {
+            var httpContent = new FormUrlEncodedContent(new Dictionary<string, string>
+            {
+                { "content", content },
+                { "isRootComment", isRootComment ? "true" : "false"},
+                { "name", name },
+                { "email", email }
+            });
+
+            using (var response = await Client.PostAsync(
+                $"/api/Comment/{id}{(asAdmin ? "?usr=root&pwd=123456" : "")}",
+                httpContent,
+                token))
+            {
+                if (response.StatusCode != HttpStatusCode.OK)
+                {
+                    var error = await response.Content.ReadAsStringAsync();
+                    throw new InvalidOperationException(error);
+                }
+                else
+                {
+                    return JsonConvert.DeserializeObject<Guid>(
+                        await response.Content.ReadAsStringAsync());
+                }
+            }
+        }
+
+        protected async Task DeleteCommentAsync(
+            Guid id, CancellationToken token = default)
+        {
+            using (var response = await Client.DeleteAsync(
+                $"/api/Comment/{id}?usr=root&pwd=123456",
+                token))
+            {
+                if (response.StatusCode != HttpStatusCode.OK)
+                {
+                    var error = await response.Content.ReadAsStringAsync();
+                    throw new InvalidOperationException(error);
+                }
+            }
+        }
+        #endregion
     }
 }

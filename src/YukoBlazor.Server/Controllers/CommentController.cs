@@ -13,7 +13,7 @@ namespace YukoBlazor.Server.Controllers
     [Route("api/[controller]")]
     public class CommentController : Controller
     {
-        [HttpGet("{id}")]
+        [HttpGet("{id:Guid}")]
         public async Task<IActionResult> Get(
             [FromServices] BlogContext db, Guid id, 
             CancellationToken token = default)
@@ -22,34 +22,64 @@ namespace YukoBlazor.Server.Controllers
                 .Include(x => x.InnerComments)
                 .Where(x => x.PostId == id)
                 .OrderByDescending(x => x.Time)
+                .Select(x => new CommentViewModel
+                {
+                    Id = x.Id,
+                    AvatarUrl = null, // TODO: Onboard Gravatar
+                    Email = User.Identity.IsAuthenticated ? x.Email : null,
+                    Content = x.Content,
+                    Name = x.Name,
+                    Time = x.Time,
+                    InnerComments = x.InnerComments.Select(y => new CommentViewModel
+                    {
+                        Id = y.Id,
+                        AvatarUrl = null, // TODO: Onboard Gravatar
+                        Email = User.Identity.IsAuthenticated ? y.Email : null,
+                        Content = y.Content,
+                        Name = y.Name,
+                        Time = y.Time
+                    })
+                })
                 .ToListAsync(token);
-
             return Json(comments);
         }
 
-        [HttpPost]
+        [HttpPost("{id:Guid}")]
         public async Task<IActionResult> Post(
-            [FromServices] BlogContext db, Guid id,
-            string content, bool isRootComment = true,
+            [FromServices] BlogContext db, Guid id, string name, 
+            string content, string email, bool isRootComment = true, 
             CancellationToken token = default)
         {
             var comment = new Comment();
+            comment.Name = name;
+            comment.Email = email;
             comment.Content = content;
             comment.IsOwner = User.Identity.IsAuthenticated;
 
             if (isRootComment)
             {
+                if (!await db.Posts.AnyAsync(x => x.Id == id, token))
+                {
+                    Response.StatusCode = 404;
+                    return Json("Post is not found");
+                }
+
                 comment.PostId = id;
             }
             else
             {
+                if (!await db.Comments.AnyAsync(x => x.Id == id, token))
+                {
+                    Response.StatusCode = 404;
+                    return Json("Parent comment is not found");
+                }
                 comment.ParentId = id;
             }
 
             db.Comments.Add(comment);
             await db.SaveChangesAsync(token);
 
-            return Json(true);
+            return Json(comment.Id);
         }
 
         [HttpDelete("{id:Guid}")]
