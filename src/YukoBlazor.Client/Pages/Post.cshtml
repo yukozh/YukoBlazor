@@ -1,4 +1,5 @@
 ﻿@page "/post/{id}"
+@using Microsoft.JSInterop;
 @inject HttpClient Http
 
 <div id="main-wrapper">
@@ -7,7 +8,7 @@
             <div class="blog-posts hfeed">
                 @if (post != null)
                 {
-                <PostMainBody PostModel="@post" />
+                    <PostMainBody PostModel="@post" />
                 }
             </div>
         </div>
@@ -19,10 +20,15 @@
 {
     PostViewModel post;
 
-    [Parameter] string id  { get; set; }
+    [Parameter] string id { get; set; }
 
     protected override async Task OnInitAsync()
     {
         post = await Http.GetJsonAsync<PostViewModel>($"api/Post/{id}");
+    }
+
+    protected async Task<string> SanitizeAsync(string src)
+    {
+        return await JSRuntime.Current.InvokeAsync<bool>("xss", src);
     }
 }
