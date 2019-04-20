@@ -20,9 +20,10 @@ namespace YukoBlazor.Server.Controllers
             [FromServices] BlogContext db,
             string title, DateTime? from, DateTime? to, 
             string catalog, string tag, bool isPage = false,
-            int page = 0, CancellationToken token = default)
+            int page = 1, CancellationToken token = default)
         {
             IQueryable<Post> query = db.Posts
+                .Include(x => x.Catalog)
                 .Include(x => x.Tags)
                 .Where(x => x.IsPage == isPage);
 
@@ -48,14 +49,14 @@ namespace YukoBlazor.Server.Controllers
 
             if (to.HasValue)
             {
-                query = query.Where(x => x.Time <= to.Value);
+                query = query.Where(x => x.Time < to.Value);
             }
 
             var dataCount = await query.CountAsync();
             var pageCount = (dataCount + PageSize - 1) / PageSize;
             var data = await query
                     .OrderByDescending(x => x.Time)
-                    .Skip(page * PageSize)
+                    .Skip((page - 1) * PageSize)
                     .Take(PageSize)
                     .ToListAsync(token);
 
@@ -66,7 +67,11 @@ namespace YukoBlazor.Server.Controllers
                 TotalPage = pageCount,
                 Data = data.Select(x => new PostViewModel
                 {
-                    Catalog = x.Catalog,
+                    Catalog = x.Catalog != null ? new Catalog
+                    {
+                        Id = x.Catalog.Id,
+                        Display = x.Catalog.Display
+                    } : null,
                     Id = x.Id,
                     Content = x.Summary,
                     Tags = x.Tags.Select(y => y.Tag),
@@ -83,6 +88,7 @@ namespace YukoBlazor.Server.Controllers
             CancellationToken token = default)
         {
             var post = await db.Posts
+                .Include(x => x.Catalog)
                 .Include(x => x.Tags)
                 .SingleOrDefaultAsync(x => x.Url == id, token);
 
@@ -96,7 +102,11 @@ namespace YukoBlazor.Server.Controllers
                 return Json(new PostViewModel
                 {
                     Id = post.Id,
-                    Catalog = post.Catalog,
+                    Catalog = post.Catalog != null ? new Catalog
+                    {
+                        Id = post.Catalog.Id,
+                        Display = post.Catalog.Display
+                    } : null,
                     Content = post.Content,
                     Tags = post.Tags.Select(y => y.Tag),
                     Time = post.Time,

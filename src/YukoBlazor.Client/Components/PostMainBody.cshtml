@@ -1,0 +1,53 @@
+﻿@using Pomelo.Marked
+
+<div class="post-outer">
+    <div class="wrapfullpost">
+        <div class="post hentry">
+            <h2 class="post-title entry-title">
+                <a href="/post/@PostModel.Url">@PostModel.Title</a>
+            </h2>
+            <div class="postmeta-primary">
+                <span class="meta_date">
+                    <i class="fa fa-clock-o"></i>
+                    @PostModel.Time.ToString("MMM dd yyyy HH:mm")
+                </span>
+                @if (PostModel.Catalog != null)
+                {
+                <span class="meta_labels">
+                    <i class="fa fa-star"></i>
+                    <a href="/catalog/@PostModel.Catalog.Id" rel="tag">@PostModel.Catalog.Display</a>
+                </span>
+                }
+                @if (PostModel.Tags?.Count() > 0)
+                {
+                <span class="meta_labels">
+                    <i class="fa fa-tags"></i>
+                    @foreach(var x in PostModel.Tags)
+                    {
+                    <a href="/tag/@x" rel="tag">@x</a>
+                    }
+                </span>
+                }
+            </div>
+            <div class="post-header-line-1"></div>
+            <div class="post-body entry-content">
+                <span>
+                    <div id="mcontent">@((MarkupString)Instance.Parse(PostModel.Content))</div>
+                </span>
+                @if (ShowReadMore)
+                {
+                <div class="readmore">
+                    <a href="/post/@PostModel.Url"><i class="fa fa-arrow-circle-right"></i> Read More</a>
+                </div>
+                }
+                <div style="clear: both;"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@functions
+{
+    [Parameter] PostViewModel PostModel { get; set; }
+    [Parameter] bool ShowReadMore { get; set; } = false;
+}

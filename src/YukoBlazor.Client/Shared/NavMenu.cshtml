@@ -18,19 +18,14 @@
     <!--Main Menu-->
     <div class='menu-secondary-container'>
         <ul class='menus menu-secondary'>
-            <li><a href='http://buzzmagtheme.blogspot.com/'>Home</a></li>
-            <li><a href='#'>Business</a></li>
-            <li><a href='#'>Downloads</a></li>
-            <li>
-                <a href='#'>Parent Category <i class='fa fa-angle-down'></i></a>
-                <ul class='children'>
-                    <li><a href='#'>Child Category 2</a></li>
-                    <li><a href='#'>Child Category 3</a></li>
-                    <li><a href='#'>Child Category 4</a></li>
-                </ul>
-            </li>
-            <li><a href='#'>Featured</a></li>
-            <li><a href='#'>Health</a></li>
+            @if (catalogs != null)
+            {
+                <li><a href="/">Home</a></li>
+                @foreach (var x in catalogs)
+                {
+                    <li><a href="/catalog/@x.Id">@x.Display</a></li>
+                }
+            }
         </ul>
     </div>
 </div>
@@ -38,11 +33,14 @@
 @functions {
     string title;
     string subtitle;
+    CatalogViewModel[] catalogs;
 
     protected override async Task OnInitAsync()
     {
         var profile = await Http.GetJsonAsync<Profile>("api/Global");
         title = profile.BlogTitle;
         subtitle = profile.Subtitle;
+
+        catalogs = await Http.GetJsonAsync<CatalogViewModel[]>("api/Catalog");
     }
 }

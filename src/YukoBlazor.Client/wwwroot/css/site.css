@@ -2358,7 +2358,7 @@ h3.widgettitle {
 #main-wrapper {
     width: 60%;
     float: left;
-    margin: 0 65px 75px;
+    margin: 0 65px 75px 0;
     word-wrap: break-word;
     overflow: hidden;
 }
@@ -2397,7 +2397,6 @@ h2.date-header {
     margin: 0px;
     padding: 0px 10px 0px 0px;
     font-size: 14px;
-    line-height: 26px;
 }
 
 .post-footer {
@@ -2424,7 +2423,6 @@ h2.date-header {
     font-family: 'Montserrat', sans-serif;
     font-size: 13px;
     font-weight: bold;
-    margin-bottom: 12px;
 }
 
     .postmeta-primary span {
@@ -2757,6 +2755,7 @@ blockquote {
     right: 0;
     position: relative;
     width: 100%;
+    margin-top: 15px;
 }
 
     #footer p.copy-right {
@@ -3277,4 +3276,8 @@ nav#nav-mobile {
         margin: 0px 0px 10px 0px !important;
         float: left;
     }
+}
+
+.post-body p {
+    margin: 0;
 }

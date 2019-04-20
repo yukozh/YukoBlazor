@@ -1,43 +1,83 @@
 ﻿@inject HttpClient Http
 
     <div id="rsidebar-wrapper">
+        @if (catalogs?.Length > 0)
+        {
+        <div class="sidebar section" id="sidebarright">
+            <div class="widget Label" data-version="1" id="Label1">
+                <h2>
+                    <i class="fa fa-star"></i>
+                    Catalog
+                </h2>
+                <div>
+                    @foreach (var x in catalogs)
+                    {
+                    <p>
+                        <a dir="ltr" href="/catalog/@x.Id">@x.Display (@x.Count)</a>
+                    </p>
+                    }
+                    <div class="clear"></div>
+                </div>
+            </div>
+        </div>
+        <p></p>
+        }
+
         @if (tags?.Length > 0)
         {
         <div class="sidebar section" id="sidebarright">
             <div class="widget Label" data-version="1" id="Label1">
                 <h2>
                     <i class="fa fa-tags"></i>
-                    Labels
+                    Tags
                 </h2>
                 <div class="widget-content list-label-widget-content">
                     <ul>
                         @foreach (var x in tags)
                         {
                         <li>
-                            <a dir="ltr" href="">@x.Title (@x.Count)</a>
+                            <a dir="ltr" href="/tag/@x.Title">@x.Title (@x.Count)</a>
                         </li>
                         }
                     </ul>
                     <div class="clear"></div>
-                    <span class="widget-item-control">
-                        <span class="item-control blog-admin">
-                            <a class="quickedit" href="//www.blogger.com/rearrange?blogID=6638523622898744294&amp;widgetType=Label&amp;widgetId=Label1&amp;action=editWidget&amp;sectionId=sidebarright" onclick="return _WidgetManager._PopupConfig(document.getElementById(&quot;Label1&quot;));" rel="nofollow" target="configLabel1" title="Edit">
-                                <img alt="" height="18" src="https://resources.blogblog.com/img/icon18_wrench_allbkg.png" width="18">
-                            </a>
-                        </span>
-                    </span>
+                </div>
+            </div>
+        </div>
+        <p></p>
+        }
+
+        @if (calendars?.Length > 0)
+        {
+        <div class="sidebar section" id="sidebarright">
+            <div class="widget Label" data-version="1" id="Label1">
+                <h2>
+                    <i class="fa fa-calendar"></i>
+                    Calendar
+                </h2>
+                <div>
+                    @foreach (var x in calendars)
+                    {
+                    <p>
+                        <a dir="ltr" href="/year/@x.Year/month/@x.Month">@x.Year @(new DateTime(x.Year, x.Month, 1).ToString("MMM")). (@x.Count)</a>
+                    </p>
+                    }
                     <div class="clear"></div>
                 </div>
             </div>
         </div>
-        }
         <p></p>
+        }
     </div>
 @functions {
+    CatalogViewModel[] catalogs;
     TagViewModel[] tags;
+    CalendarViewModel[] calendars;
 
     protected override async Task OnInitAsync()
     {
+        catalogs = await Http.GetJsonAsync<CatalogViewModel[]>("api/Catalog");
         tags = await Http.GetJsonAsync<TagViewModel[]>("api/Tag");
+        calendars = await Http.GetJsonAsync<CalendarViewModel[]>("api/Calendar");
     }
 }

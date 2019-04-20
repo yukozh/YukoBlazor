@@ -1,0 +1,28 @@
+﻿@page "/post/{id}"
+@inject HttpClient Http
+
+<div id="main-wrapper">
+    <div class="main section" id="main">
+        <div class="widget Blog" data-version="1" id="Blog1">
+            <div class="blog-posts hfeed">
+                @if (post != null)
+                {
+                <PostMainBody PostModel="@post" />
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@functions
+{
+    PostViewModel post;
+
+    [Parameter] string id  { get; set; }
+
+    protected override async Task OnInitAsync()
+    {
+        post = await Http.GetJsonAsync<PostViewModel>($"api/Post/{id}");
+    }
+}
