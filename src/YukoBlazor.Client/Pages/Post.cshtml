@@ -29,6 +29,6 @@
 
     protected async Task<string> SanitizeAsync(string src)
     {
-        return await JsRuntime.InvokeAsync<string>("xss", src);
+        return await JsRuntime.InvokeAsync<string>("filterXSS", src);
     }
 }
