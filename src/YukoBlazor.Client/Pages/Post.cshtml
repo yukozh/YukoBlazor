@@ -1,5 +1,5 @@
 ﻿@page "/post/{id}"
-@using Microsoft.JSInterop;
+@inject IJSRuntime JsRuntime;
 @inject HttpClient Http
 
 <div id="main-wrapper">
@@ -29,6 +29,6 @@
 
     protected async Task<string> SanitizeAsync(string src)
     {
-        return await JSRuntime.Current.InvokeAsync<bool>("xss", src);
+        return await JsRuntime.InvokeAsync<string>("xss", src);
     }
 }
