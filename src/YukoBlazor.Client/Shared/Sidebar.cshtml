@@ -1,0 +1,43 @@
+﻿@inject HttpClient Http
+
+    <div id="rsidebar-wrapper">
+        @if (tags?.Length > 0)
+        {
+        <div class="sidebar section" id="sidebarright">
+            <div class="widget Label" data-version="1" id="Label1">
+                <h2>
+                    <i class="fa fa-tags"></i>
+                    Labels
+                </h2>
+                <div class="widget-content list-label-widget-content">
+                    <ul>
+                        @foreach (var x in tags)
+                        {
+                        <li>
+                            <a dir="ltr" href="">@x.Title (@x.Count)</a>
+                        </li>
+                        }
+                    </ul>
+                    <div class="clear"></div>
+                    <span class="widget-item-control">
+                        <span class="item-control blog-admin">
+                            <a class="quickedit" href="//www.blogger.com/rearrange?blogID=6638523622898744294&amp;widgetType=Label&amp;widgetId=Label1&amp;action=editWidget&amp;sectionId=sidebarright" onclick="return _WidgetManager._PopupConfig(document.getElementById(&quot;Label1&quot;));" rel="nofollow" target="configLabel1" title="Edit">
+                                <img alt="" height="18" src="https://resources.blogblog.com/img/icon18_wrench_allbkg.png" width="18">
+                            </a>
+                        </span>
+                    </span>
+                    <div class="clear"></div>
+                </div>
+            </div>
+        </div>
+        }
+        <p></p>
+    </div>
+@functions {
+    TagViewModel[] tags;
+
+    protected override async Task OnInitAsync()
+    {
+        tags = await Http.GetJsonAsync<TagViewModel[]>("api/Tag");
+    }
+}

@@ -1,37 +1,48 @@
-﻿<div class="top-row pl-4 navbar navbar-dark">
-    <a class="navbar-brand" href="">YukoBlazor</a>
-    <button class="navbar-toggler" onclick="@ToggleNavMenu">
-        <span class="navbar-toggler-icon"></span>
-    </button>
-</div>
+﻿@inject HttpClient Http
 
-<div class="@NavMenuCssClass" onclick="@ToggleNavMenu">
-    <ul class="nav flex-column">
-        <li class="nav-item px-3">
-            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
-                <span class="oi oi-home" aria-hidden="true"></span> Home
-            </NavLink>
-        </li>
-        <li class="nav-item px-3">
-            <NavLink class="nav-link" href="counter">
-                <span class="oi oi-plus" aria-hidden="true"></span> Counter
-            </NavLink>
-        </li>
-        <li class="nav-item px-3">
-            <NavLink class="nav-link" href="fetchdata">
-                <span class="oi oi-list-rich" aria-hidden="true"></span> Fetch data
-            </NavLink>
-        </li>
-    </ul>
+<div id='header-wrapper'>
+    <div class='header section' id='header'>
+        <div class='widget Header' data-version='1' id='Header1'>
+            <div id='header-inner'>
+                <div class='titlewrapper'>
+                    <h1 class='title'>
+                        <a href='/'>@title<span class='dot'>.</span></a>
+                    </h1>
+                </div>
+                <div class='descriptionwrapper'>
+                    <p class='description'><span>@subtitle</span></p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--Main Menu-->
+    <div class='menu-secondary-container'>
+        <ul class='menus menu-secondary'>
+            <li><a href='http://buzzmagtheme.blogspot.com/'>Home</a></li>
+            <li><a href='#'>Business</a></li>
+            <li><a href='#'>Downloads</a></li>
+            <li>
+                <a href='#'>Parent Category <i class='fa fa-angle-down'></i></a>
+                <ul class='children'>
+                    <li><a href='#'>Child Category 2</a></li>
+                    <li><a href='#'>Child Category 3</a></li>
+                    <li><a href='#'>Child Category 4</a></li>
+                </ul>
+            </li>
+            <li><a href='#'>Featured</a></li>
+            <li><a href='#'>Health</a></li>
+        </ul>
+    </div>
 </div>
 
 @functions {
-    bool collapseNavMenu = true;
+    string title;
+    string subtitle;
 
-    string NavMenuCssClass => collapseNavMenu ? "collapse" : null;
-
-    void ToggleNavMenu()
+    protected override async Task OnInitAsync()
     {
-        collapseNavMenu = !collapseNavMenu;
+        var profile = await Http.GetJsonAsync<Profile>("api/Global");
+        title = profile.BlogTitle;
+        subtitle = profile.Subtitle;
     }
 }

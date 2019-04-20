@@ -1,15 +1,50 @@
 ﻿@inherits LayoutComponentBase
 
-<div class="sidebar">
+<div id='margin-1200'>
     <NavMenu />
-</div>
 
-<div class="main">
-    <div class="top-row px-4">
-        <a href="http://blazor.net" target="_blank" class="ml-md-auto">About</a>
-    </div>
+    <div id='nav-trigger'><span><i class='fa fa-list'></i></span></div>
+    <nav id='nav-mobile'></nav>
+    <div style='clear:both;'></div>
 
-    <div class="content px-4">
+    <div id='content-wrapper'>
+        <Sidebar />
         @Body
     </div>
+    <!-- end content-wrapper -->
+    <div style='clear:both;'></div>
+    <footer class='clearfix' id='footer'>
+        <div class='pull-right foot-copyright'>
+            <p class='copy-right'>
+                Copyrights @@ BuzzMag - Designed by <a href='http://www.templateism.com' id='mycontent'>Templateism</a>
+            </p>
+        </div>
+        <!-- Social -->
+        <ul class='f-social list-inline'>
+            <li>
+                <a href='#'>
+                    <i class='fa fa-google-plus'></i>
+                </a>
+            </li>
+            <li>
+                <a href='#'>
+                    <i class='fa fa-facebook'></i>
+                </a>
+            </li>
+            <li>
+                <a href='#'>
+                    <i class='fa fa-twitter'></i>
+                </a>
+            </li>
+        </ul>
+        <!-- Search -->
+        <div class='qsearchwrap'>
+            <div class='quicksearch'>
+                <form action='/search' method='get'>
+                    <button id='qsearchsubmit'><i class='fa fa-search'></i></button>
+                    <input class='text-input' name='q' placeholder='Search Here..' style='display: inline-block; width: 150px;' type='text' />
+                </form>
+            </div>
+        </div>
+    </footer>
 </div>

@@ -1,17 +1,14 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.IO;
-using System.Linq.Expressions;
 using System.Security.Claims;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.DataProtection;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
-using YukoBlazor.Server.Models;
+using YukoBlazor.Shared;
 
 namespace YukoBlazor.Server.Authentication
 {

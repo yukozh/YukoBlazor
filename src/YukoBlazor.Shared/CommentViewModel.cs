@@ -17,6 +17,8 @@ namespace YukoBlazor.Shared
 
         public DateTime Time { get; set; }
 
+        public bool IsOwner { get; set; }
+
         public IEnumerable<CommentViewModel> InnerComments { get; set; }
     }
 }

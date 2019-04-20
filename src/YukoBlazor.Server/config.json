@@ -2,5 +2,12 @@
   "manage": {
     "user": "root",
     "password": "123456"
+  },
+  "profile": {
+    "blogTitle": "Yuko",
+    "subTitle": "Based on Blazor",
+    "nickname": "Yuko",
+    "email": "hi@yuko.me",
+    "github": "yukozh"
   }
 }

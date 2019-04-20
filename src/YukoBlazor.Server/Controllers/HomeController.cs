@@ -3,6 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using YukoBlazor.Server.Models;
 using YukoBlazor.Shared;
 
@@ -18,6 +19,15 @@ namespace YukoBlazor.Server.Controllers
         public IActionResult Index()
         {
             return Content(ServiceOkText);
+        }
+
+        [HttpGet("api/Global")]
+        public async Task<IActionResult> Global(
+            CancellationToken token = default)
+        {
+            var config = JsonConvert.DeserializeObject<Config>(
+                await System.IO.File.ReadAllTextAsync("config.json", token));
+            return Json(config.Profile);
         }
 
         [HttpGet("api/State")]

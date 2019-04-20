@@ -1,10 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using YukoBlazor.Server.Models;
 using YukoBlazor.Shared;
 
@@ -18,6 +18,8 @@ namespace YukoBlazor.Server.Controllers
             [FromServices] BlogContext db, Guid id, 
             CancellationToken token = default)
         {
+            var config = JsonConvert.DeserializeObject<Config>(
+                await System.IO.File.ReadAllTextAsync("config.json"));
             var comments = await db.Comments
                 .Include(x => x.InnerComments)
                 .Where(x => x.PostId == id)
@@ -26,18 +28,20 @@ namespace YukoBlazor.Server.Controllers
                 {
                     Id = x.Id,
                     AvatarUrl = null, // TODO: Onboard Gravatar
-                    Email = User.Identity.IsAuthenticated ? x.Email : null,
+                    Email = User.Identity.IsAuthenticated ? (x.IsOwner ? config.Profile.Email : x.Email) : null,
                     Content = x.Content,
-                    Name = x.Name,
+                    Name = x.IsOwner ? config.Profile.Nickname : x.Name,
                     Time = x.Time,
+                    IsOwner = x.IsOwner,
                     InnerComments = x.InnerComments.Select(y => new CommentViewModel
                     {
                         Id = y.Id,
                         AvatarUrl = null, // TODO: Onboard Gravatar
-                        Email = User.Identity.IsAuthenticated ? y.Email : null,
+                        Email = User.Identity.IsAuthenticated ? (y.Email) : null,
                         Content = y.Content,
                         Name = y.Name,
-                        Time = y.Time
+                        Time = y.Time,
+                        IsOwner = y.IsOwner
                     })
                 })
                 .ToListAsync(token);
