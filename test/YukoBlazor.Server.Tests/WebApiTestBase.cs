@@ -231,7 +231,7 @@ namespace YukoBlazor.Server.Tests
             var httpContent = new FormUrlEncodedContent(dictionary);
 
             using (var response = await Client.PatchAsync(
-                $"/api/Post/{url}?usr=root&pwd=123456",
+                $"/api/Post/{url}",
                 httpContent,
                 token))
             {

@@ -7,6 +7,7 @@ namespace YukoBlazor.Client
     {
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddApiClient();
         }
 
         public void Configure(IComponentsApplicationBuilder app)

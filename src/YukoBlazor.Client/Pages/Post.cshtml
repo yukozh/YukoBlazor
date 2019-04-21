@@ -1,6 +1,6 @@
 ﻿@page "/post/{id}"
 @inject IJSRuntime JsRuntime;
-@inject HttpClient Http
+@inject ApiClient API
 
 <div id="main-wrapper">
     <div class="main section" id="main">
@@ -24,7 +24,7 @@
 
     protected override async Task OnInitAsync()
     {
-        post = await Http.GetJsonAsync<PostViewModel>($"api/Post/{id}");
+        post = await API.GetPostAsync(id);
     }
 
     protected async Task<string> SanitizeAsync(string src)

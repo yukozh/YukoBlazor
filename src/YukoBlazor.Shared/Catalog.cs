@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using Newtonsoft.Json;
 
 namespace YukoBlazor.Shared
 {
@@ -12,6 +13,7 @@ namespace YukoBlazor.Shared
 
         public int Priority { get; set; }
 
+        [JsonIgnore]
         public virtual ICollection<Post> Posts { get; set; }
     }
 }

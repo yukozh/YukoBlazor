@@ -16,6 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\YukoBlazor.ApiInvoker\YukoBlazor.ApiInvoker.csproj" />
     <ProjectReference Include="..\YukoBlazor.Shared\YukoBlazor.Shared.csproj" />
   </ItemGroup>
 

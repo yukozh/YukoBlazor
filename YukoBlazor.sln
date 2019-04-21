@@ -13,7 +13,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{243830E8-443
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{9F63F6C4-F26D-4DEB-A737-2A3B724F3041}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YukoBlazor.Server.Tests", "test\YukoBlazor.Server.Tests\YukoBlazor.Server.Tests.csproj", "{CC05C56F-A330-42C8-BAA7-B9D36B42CCA1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "YukoBlazor.Server.Tests", "test\YukoBlazor.Server.Tests\YukoBlazor.Server.Tests.csproj", "{CC05C56F-A330-42C8-BAA7-B9D36B42CCA1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YukoBlazor.ApiInvoker", "src\YukoBlazor.ApiInvoker\YukoBlazor.ApiInvoker.csproj", "{F91779C7-C5E6-403C-A3F3-51A8BFD6CC3C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -37,6 +39,10 @@ Global
 		{CC05C56F-A330-42C8-BAA7-B9D36B42CCA1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CC05C56F-A330-42C8-BAA7-B9D36B42CCA1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CC05C56F-A330-42C8-BAA7-B9D36B42CCA1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F91779C7-C5E6-403C-A3F3-51A8BFD6CC3C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F91779C7-C5E6-403C-A3F3-51A8BFD6CC3C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F91779C7-C5E6-403C-A3F3-51A8BFD6CC3C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F91779C7-C5E6-403C-A3F3-51A8BFD6CC3C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -46,6 +52,7 @@ Global
 		{2AE54ECE-AE12-4C11-AB07-6B7CDB1767AF} = {243830E8-443E-4188-B0C5-53030175E7BD}
 		{BA7753E9-011D-4821-90C5-46E69C355B78} = {243830E8-443E-4188-B0C5-53030175E7BD}
 		{CC05C56F-A330-42C8-BAA7-B9D36B42CCA1} = {9F63F6C4-F26D-4DEB-A737-2A3B724F3041}
+		{F91779C7-C5E6-403C-A3F3-51A8BFD6CC3C} = {243830E8-443E-4188-B0C5-53030175E7BD}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {B6F9CC0E-FDBC-4CD6-BC6B-5424628FAF2B}

@@ -67,11 +67,7 @@ namespace YukoBlazor.Server.Controllers
                 TotalPage = pageCount,
                 Data = data.Select(x => new PostViewModel
                 {
-                    Catalog = x.Catalog != null ? new Catalog
-                    {
-                        Id = x.Catalog.Id,
-                        Display = x.Catalog.Display
-                    } : null,
+                    Catalog = x.Catalog,
                     Id = x.Id,
                     Content = x.Summary,
                     Tags = x.Tags.Select(y => y.Tag),
@@ -102,11 +98,7 @@ namespace YukoBlazor.Server.Controllers
                 return Json(new PostViewModel
                 {
                     Id = post.Id,
-                    Catalog = post.Catalog != null ? new Catalog
-                    {
-                        Id = post.Catalog.Id,
-                        Display = post.Catalog.Display
-                    } : null,
+                    Catalog = post.Catalog,
                     Content = post.Content,
                     Tags = post.Tags.Select(y => y.Tag),
                     Time = post.Time,

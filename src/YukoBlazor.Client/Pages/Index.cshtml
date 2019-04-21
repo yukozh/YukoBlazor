@@ -6,8 +6,10 @@
 @page "/catalog/{catalog}/p/{p}"
 @page "/tag/{tag}"
 @page "/tag/{tag}/p/{p}"
+@page "/search/{search}"
+@page "/search/{search}/p/{p}"
 @using System.Text
-@inject HttpClient Http
+@inject ApiClient API
 
 <div id="main-wrapper">
     <div class="main section" id="main">
@@ -61,6 +63,8 @@
 
     [Parameter] string tag { get; set; }
 
+    [Parameter] string search { get; set; }
+
     private string BuildLink(int page)
     {
         string link;
@@ -91,25 +95,8 @@
 
     protected override async Task OnInitAsync()
     {
-        var queryBuilder = new StringBuilder($"?page={p}");
-
-        if (year.HasValue && month.HasValue)
-        {
-            queryBuilder.Append($"&from={new DateTime(year.Value, month.Value, 1).ToString("yyyy-MM-dd")}");
-            queryBuilder.Append($"&to={new DateTime(year.Value, month.Value, 1).AddMonths(1).ToString("yyyy-MM-dd")}");
-        }
-
-        if (!string.IsNullOrEmpty(catalog))
-        {
-            queryBuilder.Append($"&catalog={catalog}");
-        }
-
-        if (!string.IsNullOrEmpty(catalog))
-        {
-            queryBuilder.Append($"&tag={tag}");
-        }
-
-        var result = await Http.GetJsonAsync<PagedViewModel<PostViewModel>>("api/Post" + queryBuilder.ToString());
+        var result = await API.GetPostListAsync(
+            catalog, tag, year, month, search, false, p);
         posts = result.Data;
         totalPages = result.TotalPage;
     }
