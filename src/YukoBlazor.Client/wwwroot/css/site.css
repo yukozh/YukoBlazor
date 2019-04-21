@@ -2665,13 +2665,13 @@ blockquote {
     padding-bottom: 20px;
 }
 
-#comments h4:before {
+#lstComments h4:before {
     content: "\f0e6";
     font-family: fontawesome;
     margin-right: 10px;
 }
 
-#comments h4 {
+#lstComments h4 {
     color: #fff;
     text-transform: uppercase;
     padding: 10px;

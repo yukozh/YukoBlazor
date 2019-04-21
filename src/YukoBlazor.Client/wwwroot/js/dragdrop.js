@@ -757,7 +757,7 @@ function getSmdeValue(id) {
     return $('#textarea-' + id)[0].smde.value();
 }
 
-function setSmdeValue(id, val) {
+function clearSmdeValue(id) {
     return $('#textarea-' + id)[0].smde.value('');
 }
 

@@ -71,7 +71,7 @@
                                                                             <span class="datetime secondary-text">@y.Time.ToString("MMM dd yyyy HH:mm")</span>
                                                                         </div>
                                                                         <div>
-                                                                            @((MarkupString)x.Content)
+                                                                            @((MarkupString)y.Content)
                                                                         </div>
                                                                     </div>
                                                                 </li>
@@ -132,13 +132,18 @@
     {
         post = await API.GetPostAsync(id);
         SetCommentScope();
-        comments = await RenderCommentsMarkdownAsync(await API.GetCommentsAsync(post.Id));
-        count = CountComment(comments);
+        await LoadCommentsAsync();
     }
 
     protected override async Task OnAfterRenderAsync()
     {
         await HighlightAsync();
+    }
+
+    private async Task LoadCommentsAsync()
+    {
+        comments = await RenderCommentsMarkdownAsync(await API.GetCommentsAsync(post.Id));
+        count = CountComment(comments);
     }
 
     private void SetCommentScope(bool isRoot = true, Guid id = default)
@@ -160,10 +165,10 @@
     private async Task PostCommentAsync()
     {
         await API.PutCommentAsync(
-            commentId, await GetEditorValueAsync("txtContent"), 
+            commentId, await GetEditorValueAsync("txtContent"),
             nickname, email, isRoot);
-        await SetEditorValueAsync("txtContent", "");
-        await OnInitAsync();
+        ClearEditorValueAsync("txtContent");
+        await LoadCommentsAsync();
         StateHasChanged();
         await ScrollToElementAsync("lstComments");
     }
@@ -188,9 +193,9 @@
         return await JsRuntime.InvokeAsync<string>("getSmdeValue", id);
     }
 
-    private async Task<string> SetEditorValueAsync(string id, string val)
+    private async Task ClearEditorValueAsync(string id)
     {
-        return await JsRuntime.InvokeAsync<string>("setSmdeValue", id, val);
+        await JsRuntime.InvokeAsync<object>("clearSmdeValue", id);
     }
 
     private async Task HighlightAsync()
