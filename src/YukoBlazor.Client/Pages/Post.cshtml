@@ -25,25 +25,18 @@
                                 <ol id="top-ra">
                                     @foreach (var x in comments)
                                     {
-                                    <li class="comment" id="c480047196575346071">
+                                    <li class="comment">
                                         <div class="avatar-image-container">
                                             <img src="@x.AvatarUrl" alt="" />
                                         </div>
                                         <div class="comment-block">
                                             <div class="comment-header">
                                                 <cite class="user">@x.Name</cite>
-                                                <span class="icon user "></span>
+                                                <span class="icon user"></span>
                                                 <span class="datetime secondary-text">@x.Time.ToString("MMM dd yyyy HH:mm")</span>
                                             </div>
                                             <div>
-                                                @if (!x.IsOwner)
-                                                {
-                                                    @((MarkupString)SanitizeAsync(Instance.Parse(x.Content)).Result)
-                                                }
-                                                else
-                                                {
-                                                    @((MarkupString)Instance.Parse(x.Content))
-                                                }
+                                                @((MarkupString)x.Content)
                                             </div>
                                             <span class="comment-actions secondary-text">
                                                 <a class="comment-reply" target="_self" href="javascript:;">Reply</a>
@@ -55,12 +48,12 @@
                                                 }
                                             </span>
                                         </div>
-                                        @if (x.InnerComments != null)
+                                        @if (x.InnerComments != null && x.InnerComments.Count() > 0)
                                         {
                                             <div class="comment-replies">
-                                                <div id="c480047196575346071-rt" class="comment-thread inline-thread">
+                                                <div class="comment-thread inline-thread">
                                                     <span class="thread-toggle thread-expanded"><span class="thread-arrow"></span><span class="thread-count">Replies</span></span>
-                                                    <ol id="c480047196575346071-ra" class="thread-chrome thread-expanded">
+                                                    <ol class="thread-chrome thread-expanded">
                                                         <div>
                                                             @foreach (var y in x.InnerComments)
                                                             {
@@ -75,14 +68,7 @@
                                                                             <span class="datetime secondary-text">@y.Time.ToString("MMM dd yyyy HH:mm")</span>
                                                                         </div>
                                                                         <div>
-                                                                            @if (!y.IsOwner)
-                                                                            {
-                                                                                @((MarkupString)SanitizeAsync(Instance.Parse(y.Content)).Result)
-                                                                            }
-                                                                            else
-                                                                            {
-                                                                                @((MarkupString)Instance.Parse(y.Content))
-                                                                            }
+                                                                            @((MarkupString)x.Content)
                                                                         </div>
                                                                     </div>
                                                                 </li>
@@ -128,13 +114,35 @@
     protected override async Task OnInitAsync()
     {
         post = await API.GetPostAsync(id);
-        comments = await API.GetCommentsAsync(post.Id);
+        comments = await RenderCommentsMarkdownAsync(await API.GetCommentsAsync(post.Id));
         count = CountComment(comments);
     }
 
-    protected async Task<string> SanitizeAsync(string src)
+    private async Task<string> SanitizeAsync(string src)
     {
         return await JsRuntime.InvokeAsync<string>("filterXSS", src);
+    }
+
+    private async Task<IEnumerable<CommentViewModel>> RenderCommentsMarkdownAsync(IEnumerable<CommentViewModel> comments)
+    {
+        foreach (var x in comments)
+        {
+            if (x.IsOwner)
+            {
+                x.Content = Instance.Parse(x.Content);
+            }
+            else
+            {
+                x.Content = await SanitizeAsync(Instance.Parse(x.Content));
+            }
+
+            if (x.InnerComments != null)
+            {
+                await RenderCommentsMarkdownAsync(x.InnerComments);
+            }
+        }
+
+        return comments;
     }
 
     private int CountComment(IEnumerable<CommentViewModel> src, bool isSecondLevel = false)
@@ -147,6 +155,9 @@
         {
             return src.Count();
         }
-        return src.Count() + src.Select(x => CountComment(x.InnerComments, true)).Sum();
+        else
+        {
+            return src.Count() + src.Select(x => CountComment(x.InnerComments, true)).Sum();
+        }
     }
 }

@@ -30,10 +30,9 @@ namespace YukoBlazor.Server
             app.UseResponseCompression();
 
             app.UseErrorHandlingMiddleware();
-            //app.UseDeveloperExceptionPage();
+            app.UseBlazorDebugging();
             if (env.IsDevelopment())
             {
-                app.UseBlazorDebugging();
             }
 
             app.UseAuthentication();
