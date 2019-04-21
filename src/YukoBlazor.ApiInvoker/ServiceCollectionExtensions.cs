@@ -7,6 +7,7 @@ namespace Microsoft.Extensions.DependencyInjection
         public static IServiceCollection AddApiClient(this IServiceCollection self)
         {
             return self
+                .AddSingleton<AppState>()
                 .AddSingleton<IdentityContainer>()
                 .AddSingleton<ApiClient>();
         }

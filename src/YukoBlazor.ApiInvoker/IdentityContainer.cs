@@ -5,13 +5,16 @@ namespace YukoBlazor.ApiInvoker
 {
     public class IdentityContainer : IDisposable
     {
+        public event Action OnIdentityChanged;
         private HttpClient client;
+        private AppState state;
 
         public bool IsAuthenticated => client.DefaultRequestHeaders.Contains("Authorization");
 
-        public IdentityContainer(HttpClient client)
+        public IdentityContainer(HttpClient client, AppState state)
         {
             this.client = client;
+            this.state = state;
         }
 
         public void Dispose()
@@ -27,6 +30,7 @@ namespace YukoBlazor.ApiInvoker
             if (client.DefaultRequestHeaders.Contains("Authorization"))
             {
                 client.DefaultRequestHeaders.Remove("Authorization");
+                state.TriggerStateChange();
             }
         }
 
@@ -34,6 +38,7 @@ namespace YukoBlazor.ApiInvoker
         {
             RemoveIdentity();
             client.DefaultRequestHeaders.Add("Authorization", $"Yuko {username} {password}");
+            state.TriggerStateChange();
         }
     }
 }

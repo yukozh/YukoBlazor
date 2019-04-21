@@ -3,6 +3,7 @@
 @inject IJSRuntime JsRuntime
 @inject ApiClient API
 @inject IdentityContainer ID
+@inject AppState State
 
 <div id="main-wrapper">
     <div class="main section" id="main">
@@ -145,6 +146,7 @@
         post = await API.GetPostAsync(id);
         SetCommentScope();
         await LoadCommentsAsync();
+        State.OnStateChanged += () => { StateHasChanged(); };
     }
 
     protected override async Task OnAfterRenderAsync()

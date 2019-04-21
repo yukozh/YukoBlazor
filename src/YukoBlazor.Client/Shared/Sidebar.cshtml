@@ -1,8 +1,10 @@
 ﻿@inject ApiClient API
+@inject IdentityContainer ID
+@inject AppState State
 
-    <div id="rsidebar-wrapper">
-        @if (catalogs?.Count() > 0)
-        {
+<div id="rsidebar-wrapper">
+    @if (catalogs?.Count() > 0)
+    {
         <div class="sidebar section" id="sidebarright">
             <div class="widget Label" data-version="1" id="Label1">
                 <h2>
@@ -12,19 +14,19 @@
                 <div>
                     @foreach (var x in catalogs)
                     {
-                    <p>
-                        <a dir="ltr" href="/catalog/@x.Id">@x.Display (@x.Count)</a>
-                    </p>
+                        <p>
+                            <a dir="ltr" href="/catalog/@x.Id">@x.Display (@x.Count)</a>
+                        </p>
                     }
                     <div class="clear"></div>
                 </div>
             </div>
         </div>
         <p></p>
-        }
+    }
 
-        @if (tags?.Count() > 0)
-        {
+    @if (tags?.Count() > 0)
+    {
         <div class="sidebar section" id="sidebarright">
             <div class="widget Label" data-version="1" id="Label1">
                 <h2>
@@ -35,9 +37,9 @@
                     <ul>
                         @foreach (var x in tags)
                         {
-                        <li>
-                            <a dir="ltr" href="/tag/@x.Title">@x.Title (@x.Count)</a>
-                        </li>
+                            <li>
+                                <a dir="ltr" href="/tag/@x.Title">@x.Title (@x.Count)</a>
+                            </li>
                         }
                     </ul>
                     <div class="clear"></div>
@@ -45,10 +47,10 @@
             </div>
         </div>
         <p></p>
-        }
+    }
 
-        @if (calendars?.Count() > 0)
-        {
+    @if (calendars?.Count() > 0)
+    {
         <div class="sidebar section" id="sidebarright">
             <div class="widget Label" data-version="1" id="Label1">
                 <h2>
@@ -58,17 +60,36 @@
                 <div>
                     @foreach (var x in calendars)
                     {
-                    <p>
-                        <a dir="ltr" href="/year/@x.Year/month/@x.Month">@x.Year @(new DateTime(x.Year, x.Month, 1).ToString("MMM")). (@x.Count)</a>
-                    </p>
+                        <p>
+                            <a dir="ltr" href="/year/@x.Year/month/@x.Month">@x.Year @(new DateTime(x.Year, x.Month, 1).ToString("MMM")). (@x.Count)</a>
+                        </p>
                     }
                     <div class="clear"></div>
                 </div>
             </div>
         </div>
         <p></p>
-        }
-    </div>
+    }
+    
+    @if (ID.IsAuthenticated)
+    {
+        <div class="sidebar section" id="sidebarright">
+            <div class="widget Label" data-version="1" id="Label1">
+                <h2>
+                    <i class="fa fa-cog"></i>
+                    Manage
+                </h2>
+                <div>
+                    <p>
+                        <a dir="ltr" onclick="@(() => { ID.RemoveIdentity(); })">Logout</a>
+                    </p>
+                    <div class="clear"></div>
+                </div>
+            </div>
+        </div>
+        <p></p>
+    }
+</div>
 @functions {
     IEnumerable<CatalogViewModel> catalogs;
     IEnumerable<TagViewModel> tags;
@@ -79,5 +100,6 @@
         catalogs = await API.GetCatalogsAsync();
         tags = await API.GetTagsAsync();
         calendars = await API.GetCalendarAsync();
+        State.OnStateChanged += () => { StateHasChanged(); };
     }
 }
