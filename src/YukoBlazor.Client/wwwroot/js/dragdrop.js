@@ -752,3 +752,22 @@ function DropEnable() {
         }
     });
 }
+
+function getSmdeValue(id) {
+    return $('#textarea-' + id)[0].smde.value();
+}
+
+function setSmdeValue(id, val) {
+    return $('#textarea-' + id)[0].smde.value('');
+}
+
+function scrollToElementId(elementId) {
+    console.info('scrolling to element', elementId);
+    var element = document.getElementById(elementId);
+    if (!element) {
+        console.warn('element was not found', elementId);
+        return false;
+    }
+    element.scrollIntoView();
+    return true;
+}

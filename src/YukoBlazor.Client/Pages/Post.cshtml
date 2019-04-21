@@ -14,7 +14,7 @@
                 }
             </div>
 
-            <div class="comments" id="comments">
+            <div id="lstComments" class="comments">
                 <a name="comments"></a>
                 <h4> @count comments: </h4>
                 <div class="comments-content">
@@ -86,8 +86,15 @@
                                 </ol>
                             }
                             <div id="top-continue" class="continue">
-                                <a class="comment-reply link" target="_self" href="javascript:;">Add comment</a>
+                                <a class="comment-reply link" target="_self" onclick="@(() => SetCommentScope())">Add comment</a>
+                                <div>
+                                    <input bind="@nickname" type="text" class="textbox" placeholder="Nickname" />
+                                    <input bind="@email" type="email" class="textbox" placeholder="Email" />
+                                </div>
                                 <MarkdownEditor content="" id="txtContent" />
+                                <div style="margin-top: 30px">
+                                    <a class="button" onclick="@PostCommentAsync">Add comment</a>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -107,6 +114,10 @@
 @functions
 {
     int count = 0;
+    Guid commentId;
+    bool isRoot = true;
+    string nickname;
+    string email;
     PostViewModel post;
     IEnumerable<CommentViewModel> comments;
 
@@ -115,6 +126,7 @@
     protected override async Task OnInitAsync()
     {
         post = await API.GetPostAsync(id);
+        SetCommentScope();
         comments = await RenderCommentsMarkdownAsync(await API.GetCommentsAsync(post.Id));
         count = CountComment(comments);
     }
@@ -124,9 +136,49 @@
         await HighlightAsync();
     }
 
+    private void SetCommentScope(bool isRoot = true, Guid id = default)
+    {
+        this.isRoot = isRoot;
+
+        if (isRoot)
+        {
+            commentId = post.Id;
+        }
+        else
+        {
+            commentId = id;
+        }
+    }
+
+    private async Task PostCommentAsync()
+    {
+        await API.PutCommentAsync(
+            commentId, await GetEditorValueAsync("txtContent"), 
+            nickname, email);
+        await SetEditorValueAsync("txtContent", "");
+        await OnInitAsync();
+        StateHasChanged();
+        await ScrollToElementAsync("lstComments");
+    }
+
+    private async Task<string> ScrollToElementAsync(string id)
+    {
+        return await JsRuntime.InvokeAsync<string>("scrollToElementId", id);
+    }
+
     private async Task<string> SanitizeAsync(string src)
     {
         return await JsRuntime.InvokeAsync<string>("filterXSS", src);
+    }
+
+    private async Task<string> GetEditorValueAsync(string id)
+    {
+        return await JsRuntime.InvokeAsync<string>("getSmdeValue", id);
+    }
+
+    private async Task<string> SetEditorValueAsync(string id, string val)
+    {
+        return await JsRuntime.InvokeAsync<string>("getSmdeValue", id, val);
     }
 
     private async Task HighlightAsync()

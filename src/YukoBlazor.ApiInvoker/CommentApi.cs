@@ -19,7 +19,7 @@ namespace YukoBlazor.ApiInvoker
             return await client.GetJsonAsync<IEnumerable<CommentViewModel>>("/api/Comment/" + id);
         }
 
-        public async Task<Guid> CreateCommentAsync(
+        public async Task<Guid> PutCommentAsync(
             Guid id, string content, string name = null, string email = null,
             bool isRootComment = true, CancellationToken token = default)
         {

@@ -3281,3 +3281,24 @@ nav#nav-mobile {
 .post-body p {
     margin: 0;
 }
+
+.button {
+    background: #ffa902;
+    padding: 10px 15px;
+    color: #fff;
+    border-radius: 50px;
+}
+
+    .button:hover {
+        background: #ffbf41;
+        color: #fff;
+    }
+
+.textbox {
+    background: rgba(72, 85, 94, 0.8);
+    border: none;
+    padding: 8px 10px;
+    color: #b1b8be;
+    border-radius: 2px;
+    margin-bottom: 5px;
+}
