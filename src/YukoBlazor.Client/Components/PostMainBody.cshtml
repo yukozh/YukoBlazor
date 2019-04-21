@@ -13,20 +13,20 @@
                 </span>
                 @if (PostModel.Catalog != null)
                 {
-                <span class="meta_labels">
-                    <i class="fa fa-star"></i>
-                    <a href="/catalog/@PostModel.Catalog.Id" rel="tag">@PostModel.Catalog.Display</a>
-                </span>
+                    <span class="meta_labels">
+                        <i class="fa fa-star"></i>
+                        <a href="/catalog/@PostModel.Catalog.Id" rel="tag">@PostModel.Catalog.Display</a>
+                    </span>
                 }
                 @if (PostModel.Tags?.Count() > 0)
                 {
-                <span class="meta_labels">
-                    <i class="fa fa-tags"></i>
-                    @foreach(var x in PostModel.Tags)
-                    {
-                    <a href="/tag/@x" rel="tag">@x</a>
-                    }
-                </span>
+                    <span class="meta_labels">
+                        <i class="fa fa-tags"></i>
+                        @foreach (var x in PostModel.Tags)
+                        {
+                            <a href="/tag/@x" rel="tag">@x</a>
+                        }
+                    </span>
                 }
             </div>
             <div class="post-header-line-1"></div>
@@ -36,9 +36,9 @@
                 </span>
                 @if (ShowReadMore)
                 {
-                <div class="readmore">
-                    <a href="/post/@PostModel.Url"><i class="fa fa-arrow-circle-right"></i> Read More</a>
-                </div>
+                    <div class="readmore">
+                        <a href="/post/@PostModel.Url"><i class="fa fa-arrow-circle-right"></i> Read More</a>
+                    </div>
                 }
                 <div style="clear: both;"></div>
             </div>

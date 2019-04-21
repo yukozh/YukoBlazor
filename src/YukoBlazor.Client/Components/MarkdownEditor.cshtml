@@ -1,0 +1,19 @@
+﻿@*@inject IJSRuntime JsRuntime
+
+<textarea id="@id" class="markdown-textbox" name="Content" placeholder="Markdown here...">@content</textarea>
+
+@functions
+{
+    [Parameter] string id { get; set; }
+    [Parameter] string content { get; set; }
+
+    protected override async Task OnAfterRenderAsync()
+    {
+        await EnableDragAndDropAsync();
+    }
+
+    private async Task EnableDragAndDropAsync()
+    {
+        await JsRuntime.InvokeAsync<object>("DropEnable");
+    }
+}*@

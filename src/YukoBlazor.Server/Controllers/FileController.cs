@@ -64,7 +64,7 @@ namespace YukoBlazor.Server.Controllers
                 db.Blobs.Add(blob);
                 await db.SaveChangesAsync(token);
 
-                return Json(blob.Id);
+                return Json(new { blob.Id, blob.FileName });
             }
             else if (base64 != null)
             {
@@ -92,7 +92,7 @@ namespace YukoBlazor.Server.Controllers
                 db.Blobs.Add(blob);
                 await db.SaveChangesAsync(token);
 
-                return Json(blob.Id);
+                return Json(new { blob.Id, blob.FileName });
             }
             else
             {
