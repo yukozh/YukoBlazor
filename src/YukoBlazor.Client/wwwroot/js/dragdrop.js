@@ -709,8 +709,8 @@ var replaceText = '\r\n' + replaceInnerText + '\r\n';
             }
             if (onUploading)
                 onUploading();
-            postargs.file = data.dataURL;
-            $.post('/api/file/upload', postargs, function (result) {
+            postargs.base64 = data.dataURL;
+            $.post('/api/file', postargs, function (result) {
                 if (onUploaded)
                     onUploaded(result);
             }, 'json');
@@ -738,7 +738,7 @@ function DropEnable() {
             },
                 function (result) {
                     smde.codemirror.setSelection(begin_pos, end_pos);
-                    smde.codemirror.replaceSelection('![' + result.fileName + '](/file/download/' + result.id + ')');
+                    smde.codemirror.replaceSelection('![' + result.fileName + '](/api/file/' + result.id + ')');
                 });
         }
     });

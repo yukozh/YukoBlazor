@@ -1374,7 +1374,7 @@ iframe.avatar-hovercard-iframe {
         cursor: pointer
     }
 
-        .comments .continue a {
+        .comments .continue a.link {
             display: block;
             font-weight: bold;
             padding: .5em
