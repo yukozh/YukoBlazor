@@ -119,7 +119,7 @@ namespace YukoBlazor.Server.Controllers
             {
                 var bytes = Encoding.UTF8.GetBytes(email.Trim().ToLower());
                 var hash = BitConverter.ToString(md5.ComputeHash(bytes)).Replace("-", string.Empty).ToLower();
-                return $"http://www.gravatar.com/avatar/{hash}?d=identicon";
+                return $"//www.gravatar.com/avatar/{hash}?d=identicon";
             }
         }
     }
