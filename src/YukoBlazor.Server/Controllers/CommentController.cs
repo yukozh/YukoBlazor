@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Linq;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Security.Cryptography;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
@@ -27,7 +29,7 @@ namespace YukoBlazor.Server.Controllers
                 .Select(x => new CommentViewModel
                 {
                     Id = x.Id,
-                    AvatarUrl = null, // TODO: Onboard Gravatar
+                    AvatarUrl = GetAvatarUrl(x.IsOwner ? config.Profile.Email : x.Email),
                     Email = User.Identity.IsAuthenticated ? (x.IsOwner ? config.Profile.Email : x.Email) : null,
                     Content = x.Content,
                     Name = x.IsOwner ? config.Profile.Nickname : x.Name,
@@ -36,10 +38,10 @@ namespace YukoBlazor.Server.Controllers
                     InnerComments = x.InnerComments.Select(y => new CommentViewModel
                     {
                         Id = y.Id,
-                        AvatarUrl = null, // TODO: Onboard Gravatar
-                        Email = User.Identity.IsAuthenticated ? (y.Email) : null,
+                        AvatarUrl = GetAvatarUrl(y.IsOwner ? config.Profile.Email : y.Email),
+                        Email = User.Identity.IsAuthenticated ? (y.IsOwner ? config.Profile.Email : y.Email) : null,
                         Content = y.Content,
-                        Name = y.Name,
+                        Name = y.IsOwner ? config.Profile.Nickname : y.Name,
                         Time = y.Time,
                         IsOwner = y.IsOwner
                     })
@@ -109,6 +111,16 @@ namespace YukoBlazor.Server.Controllers
             db.Comments.Remove(comment);
             await db.SaveChangesAsync(token);
             return Json(true);
+        }
+
+        internal static string GetAvatarUrl(string email)
+        {
+            using (var md5 = MD5.Create())
+            {
+                var bytes = Encoding.UTF8.GetBytes(email.Trim().ToLower());
+                var hash = BitConverter.ToString(md5.ComputeHash(bytes)).Replace("-", string.Empty).ToLower();
+                return $"http://www.gravatar.com/avatar/{hash}?d=identicon";
+            }
         }
     }
 }

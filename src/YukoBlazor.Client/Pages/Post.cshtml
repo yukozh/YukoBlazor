@@ -32,7 +32,13 @@
                                             </div>
                                             <div class="comment-block">
                                                 <div class="comment-header">
-                                                    <cite class="user">@x.Name</cite>
+                                                    <cite class="user">
+                                                        @if (x.IsOwner)
+                                                        {
+                                                            <span class="author">Author</span>
+                                                        }
+                                                        @x.Name
+                                                    </cite>
                                                     <span class="icon user"></span>
                                                     <span class="datetime secondary-text">@x.Time.ToString("MMM dd yyyy HH:mm")</span>
                                                 </div>
@@ -66,7 +72,13 @@
                                                                     </div>
                                                                     <div class="comment-block">
                                                                         <div class="comment-header">
-                                                                            <cite class="user">@y.Name</cite>
+                                                                            <cite class="user">
+                                                                                @if (y.IsOwner)
+                                                                                {
+                                                                                    <span class="author">Author</span>
+                                                                                }
+                                                                                @y.Name
+                                                                            </cite>
                                                                             <span class="icon user "></span>
                                                                             <span class="datetime secondary-text">@y.Time.ToString("MMM dd yyyy HH:mm")</span>
                                                                         </div>

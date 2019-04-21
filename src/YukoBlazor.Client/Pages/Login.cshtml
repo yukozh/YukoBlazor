@@ -1,0 +1,28 @@
+﻿@page "/manage/login"
+@inject IdentityContainer ID
+
+<div id="main-wrapper">
+    <div class="main section" id="main">
+        <div class="widget Blog" data-version="1" id="Blog1">
+            <div class="blog-posts hfeed">
+                <h4>Login</h4>
+                <p>
+                    <input bind="@username" class="textbox" placeholder="Username" type="text" />
+                </p>
+                <p>
+                    <input bind="@password" class="textbox" placeholder="Password" type="password" />
+                </p>
+                <p>
+                    <input onclick="@(() => ID.SetIdentity(username, password))" class="button" value="Login" type="button" />
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@functions
+{
+    string username;
+    string password;
+}
