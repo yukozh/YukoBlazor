@@ -118,9 +118,19 @@
         count = CountComment(comments);
     }
 
+    protected override async Task OnAfterRenderAsync()
+    {
+        await HighlightAsync();
+    }
+
     private async Task<string> SanitizeAsync(string src)
     {
         return await JsRuntime.InvokeAsync<string>("filterXSS", src);
+    }
+
+    private async Task HighlightAsync()
+    {
+        await JsRuntime.InvokeAsync<object>("Highlight");
     }
 
     private async Task<IEnumerable<CommentViewModel>> RenderCommentsMarkdownAsync(IEnumerable<CommentViewModel> comments)

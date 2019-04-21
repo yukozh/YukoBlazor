@@ -10,6 +10,7 @@
 @page "/search/{search}/p/{p}"
 @using System.Text
 @inject ApiClient API
+@inject IJSRuntime JsRuntime
 
 <div id="main-wrapper">
     <div class="main section" id="main">
@@ -99,5 +100,16 @@
             catalog, tag, year, month, search, false, p);
         posts = result.Data;
         totalPages = result.TotalPage;
+        HighlightAsync();
+    }
+
+    protected override async Task OnAfterRenderAsync()
+    {
+        await HighlightAsync();
+    }
+
+    private async Task HighlightAsync()
+    {
+        await JsRuntime.InvokeAsync<object>("Highlight");
     }
 }
