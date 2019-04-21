@@ -26,27 +26,30 @@
                                     @foreach (var x in comments)
                                     {
                                     <li class="comment">
-                                        <div class="avatar-image-container">
-                                            <img src="@x.AvatarUrl" alt="" />
-                                        </div>
-                                        <div class="comment-block">
-                                            <div class="comment-header">
-                                                <cite class="user">@x.Name</cite>
-                                                <span class="icon user"></span>
-                                                <span class="datetime secondary-text">@x.Time.ToString("MMM dd yyyy HH:mm")</span>
+                                        <div>
+                                            <div class="avatar-image-container">
+                                                <img src="@x.AvatarUrl" alt="" />
                                             </div>
-                                            <div>
-                                                @((MarkupString)x.Content)
+                                            <div class="comment-block">
+                                                <div class="comment-header">
+                                                    <cite class="user">@x.Name</cite>
+                                                    <span class="icon user"></span>
+                                                    <span class="datetime secondary-text">@x.Time.ToString("MMM dd yyyy HH:mm")</span>
+                                                </div>
+                                                <div>
+                                                    @((MarkupString)x.Content)
+                                                </div>
+                                                <span class="comment-actions secondary-text">
+                                                    <a class="comment-reply" onclick="@(() => SetCommentScope(false, x.Id))">Reply</a>
+                                                    @if (ID.IsAuthenticated)
+                                                    {
+                                                        <span class="item-control">
+                                                            <a target="_self">Delete</a>
+                                                        </span>
+                                                    }
+                                                </span>
                                             </div>
-                                            <span class="comment-actions secondary-text">
-                                                <a class="comment-reply" target="_self" href="javascript:;">Reply</a>
-                                                @if (ID.IsAuthenticated)
-                                                {
-                                                    <span class="item-control">
-                                                        <a target="_self">Delete</a>
-                                                    </span>
-                                                }
-                                            </span>
+                                            <div style="margin-top:55px;" id="comment-@x.Id"></div>
                                         </div>
                                         @if (x.InnerComments != null && x.InnerComments.Count() > 0)
                                         {
@@ -74,9 +77,6 @@
                                                                 </li>
                                                             }
                                                         </div>
-                                                        <div class="continue">
-                                                            <a class="comment-reply" target="_self" href="javascript:;">Reply</a>
-                                                        </div>
                                                     </ol>
                                                 </div>
                                             </div>
@@ -87,13 +87,18 @@
                             }
                             <div id="top-continue" class="continue">
                                 <a class="comment-reply link" target="_self" onclick="@(() => SetCommentScope())">Add comment</a>
-                                <div>
-                                    <input bind="@nickname" type="text" class="textbox" placeholder="Nickname" />
-                                    <input bind="@email" type="email" class="textbox" placeholder="Email" />
-                                </div>
-                                <MarkdownEditor content="" id="txtContent" />
-                                <div style="margin-top: 30px">
-                                    <a class="button" onclick="@PostCommentAsync">Add comment</a>
+                                <div id="comment-box">
+                                    @if (!ID.IsAuthenticated)
+                                    {
+                                        <div>
+                                            <input bind="@nickname" type="text" class="textbox" placeholder="Nickname" />
+                                            <input bind="@email" type="email" class="textbox" placeholder="Email" />
+                                        </div>
+                                    }
+                                    <MarkdownEditor content="" id="txtContent" />
+                                    <div style="margin-top: 15px">
+                                        <a class="button" onclick="@PostCommentAsync">Add comment</a>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -142,10 +147,12 @@
 
         if (isRoot)
         {
+            MoveCommentBoxAsync();
             commentId = post.Id;
         }
         else
         {
+            MoveCommentBoxAsync(id);
             commentId = id;
         }
     }
@@ -154,21 +161,26 @@
     {
         await API.PutCommentAsync(
             commentId, await GetEditorValueAsync("txtContent"), 
-            nickname, email);
+            nickname, email, isRoot);
         await SetEditorValueAsync("txtContent", "");
         await OnInitAsync();
         StateHasChanged();
         await ScrollToElementAsync("lstComments");
     }
 
-    private async Task<string> ScrollToElementAsync(string id)
+    private async Task ScrollToElementAsync(string id)
     {
-        return await JsRuntime.InvokeAsync<string>("scrollToElementId", id);
+        await JsRuntime.InvokeAsync<object>("scrollToElementId", id);
     }
 
     private async Task<string> SanitizeAsync(string src)
     {
         return await JsRuntime.InvokeAsync<string>("filterXSS", src);
+    }
+
+    private async Task MoveCommentBoxAsync(Guid? id = null)
+    {
+        await JsRuntime.InvokeAsync<object>("moveCommentBox", id);
     }
 
     private async Task<string> GetEditorValueAsync(string id)
@@ -178,7 +190,7 @@
 
     private async Task<string> SetEditorValueAsync(string id, string val)
     {
-        return await JsRuntime.InvokeAsync<string>("getSmdeValue", id, val);
+        return await JsRuntime.InvokeAsync<string>("setSmdeValue", id, val);
     }
 
     private async Task HighlightAsync()

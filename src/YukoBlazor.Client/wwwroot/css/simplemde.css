@@ -444,7 +444,7 @@ span.CodeMirror-selectedtext {
     min-height: 300px;
 }
 
-.continue .CodeMirror-scroll {
+#lstComments .CodeMirror-scroll {
     min-height: 150px;
     height: 150px;
 }

@@ -771,3 +771,11 @@ function scrollToElementId(elementId) {
     element.scrollIntoView();
     return true;
 }
+
+function moveCommentBox(id) {
+    if (id) {
+        $('#comment-' + id).append($('#comment-box'));
+    } else {
+        $('#top-continue').append($('#comment-box'));
+    }
+}
