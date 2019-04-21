@@ -3311,3 +3311,8 @@ nav#nav-mobile {
     margin-right: 5px;
     float: left;
 }
+
+.comment-actions {
+    margin-left: 5px;
+    text-align: center;
+}

@@ -1,4 +1,5 @@
 ﻿@page "/manage/login"
+@inject ApiClient API
 @inject IdentityContainer ID
 @inject Microsoft.AspNetCore.Components.Services.IUriHelper UriHelper
 
@@ -14,7 +15,7 @@
                     <input bind="@password" class="textbox" placeholder="Password" type="password" />
                 </p>
                 <p>
-                    <input onclick="@(() => SetIdentity())" class="button" value="Login" type="button" />
+                    <input onclick="@SetIdentityAsync" class="button" value="Login" type="button" />
                 </p>
             </div>
         </div>
@@ -27,9 +28,12 @@
     string username;
     string password;
 
-    private void SetIdentity()
+    private async Task SetIdentityAsync()
     {
         ID.SetIdentity(username, password);
-        UriHelper.NavigateTo("/");
+        if (await API.ValidateIdentityAsync(username, password))
+        {
+            UriHelper.NavigateTo("/");
+        }
     }
 }

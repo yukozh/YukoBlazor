@@ -12,5 +12,11 @@ namespace YukoBlazor.ApiInvoker
         {
             return await client.GetJsonAsync<Profile>("/api/Global");
         }
+
+        public async Task<bool> ValidateIdentityAsync(
+            string username, string password, CancellationToken token = default)
+        {
+            return (await client.GetStringAsync($"/api/State?usr={username}&pwd={password}")) == "Authenticated";
+        }
     }
 }

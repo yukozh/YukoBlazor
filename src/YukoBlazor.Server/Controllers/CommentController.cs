@@ -100,6 +100,7 @@ namespace YukoBlazor.Server.Controllers
             }
 
             var comment = await db.Comments
+                .Include(x => x.InnerComments)
                 .SingleOrDefaultAsync(x => x.Id == id, token);
 
             if (comment == null)
@@ -108,6 +109,10 @@ namespace YukoBlazor.Server.Controllers
                 return Json($"The comment {id} is not found");
             }
 
+            if (comment.InnerComments != null)
+            {
+                db.Comments.RemoveRange(comment);
+            }
             db.Comments.Remove(comment);
             await db.SaveChangesAsync(token);
             return Json(true);

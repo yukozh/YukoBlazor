@@ -46,14 +46,14 @@
                                                     @((MarkupString)x.Content)
                                                 </div>
                                                 <span class="comment-actions secondary-text">
-                                                    <a class="comment-reply" onclick="@(() => SetCommentScope(false, x.Id))">Reply</a>
-                                                    @if (ID.IsAuthenticated)
-                                                    {
-                                                        <span class="item-control">
-                                                            <a target="_self">Delete</a>
-                                                        </span>
-                                                    }
+                                                    <a class="comment-reply" onclick="@(() => SetCommentScope(false, x.Id))"><i class="fa fa-comment"></i></a>
                                                 </span>
+                                                @if (ID.IsAuthenticated)
+                                                {
+                                                    <span class="comment-actions secondary-text" onclick="@(() => DeleteCommentAsync(@x.Id))">
+                                                        <a class="comment-reply"><i class="fa fa-trash"></i></a>
+                                                    </span>
+                                                }
                                             </div>
                                             <div style="margin-top:55px; padding-left:85px;" id="comment-@x.Id"></div>
                                         </div>
@@ -85,6 +85,12 @@
                                                                         <div>
                                                                             @((MarkupString)y.Content)
                                                                         </div>
+                                                                        @if (ID.IsAuthenticated)
+                                                                        {
+                                                                            <span class="comment-actions secondary-text" onclick="@(() => DeleteCommentAsync(@y.Id))">
+                                                                                <a class="comment-reply"><i class="fa fa-trash"></i></a>
+                                                                            </span>
+                                                                        }
                                                                     </div>
                                                                 </li>
                                                             }
@@ -116,12 +122,6 @@
                         </div>
                     </div>
                 </div>
-                <p class="comment-footer"> </p>
-                <div class="comment-form">
-                    <a name="comment-form"></a>
-                    <p> </p>
-                    <a href="https://www.blogger.com/comment-iframe.g?blogID=6638523622898744294&amp;postID=7132000124497114716&amp;blogspotRpcToken=9065075" id="comment-editor-src"></a>
-                </div>
             </div>
         </div>
     </div>
@@ -150,6 +150,13 @@
     protected override async Task OnAfterRenderAsync()
     {
         await HighlightAsync();
+    }
+
+    private async Task DeleteCommentAsync(Guid id)
+    {
+        await API.DeleteCommentAsync(id);
+        await LoadCommentsAsync();
+        StateHasChanged();
     }
 
     private async Task LoadCommentsAsync()

@@ -60,7 +60,7 @@ namespace YukoBlazor.ApiInvoker
             }
         }
 
-        protected async Task DeleteCommentAsync(
+        public async Task DeleteCommentAsync(
             Guid id, CancellationToken token = default)
         {
             using (var response = await client.DeleteAsync(
