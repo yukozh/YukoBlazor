@@ -1,7 +1,7 @@
-﻿@inject HttpClient Http
+﻿@inject ApiClient API
 
     <div id="rsidebar-wrapper">
-        @if (catalogs?.Length > 0)
+        @if (catalogs?.Count() > 0)
         {
         <div class="sidebar section" id="sidebarright">
             <div class="widget Label" data-version="1" id="Label1">
@@ -23,7 +23,7 @@
         <p></p>
         }
 
-        @if (tags?.Length > 0)
+        @if (tags?.Count() > 0)
         {
         <div class="sidebar section" id="sidebarright">
             <div class="widget Label" data-version="1" id="Label1">
@@ -47,7 +47,7 @@
         <p></p>
         }
 
-        @if (calendars?.Length > 0)
+        @if (calendars?.Count() > 0)
         {
         <div class="sidebar section" id="sidebarright">
             <div class="widget Label" data-version="1" id="Label1">
@@ -70,14 +70,14 @@
         }
     </div>
 @functions {
-    CatalogViewModel[] catalogs;
-    TagViewModel[] tags;
-    CalendarViewModel[] calendars;
+    IEnumerable<CatalogViewModel> catalogs;
+    IEnumerable<TagViewModel> tags;
+    IEnumerable<CalendarViewModel> calendars;
 
     protected override async Task OnInitAsync()
     {
-        catalogs = await Http.GetJsonAsync<CatalogViewModel[]>("api/Catalog");
-        tags = await Http.GetJsonAsync<TagViewModel[]>("api/Tag");
-        calendars = await Http.GetJsonAsync<CalendarViewModel[]>("api/Calendar");
+        catalogs = await API.GetCatalogsAsync();
+        tags = await API.GetTagsAsync();
+        calendars = await API.GetCalendarAsync();
     }
 }

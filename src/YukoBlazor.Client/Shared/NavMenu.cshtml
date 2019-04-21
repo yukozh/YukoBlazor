@@ -1,4 +1,4 @@
-﻿@inject HttpClient Http
+﻿@inject ApiClient API
 
 <div id='header-wrapper'>
     <div class='header section' id='header'>
@@ -33,14 +33,14 @@
 @functions {
     string title;
     string subtitle;
-    CatalogViewModel[] catalogs;
+    IEnumerable<CatalogViewModel> catalogs;
 
     protected override async Task OnInitAsync()
     {
-        var profile = await Http.GetJsonAsync<Profile>("api/Global");
+        var profile = await API.GetProfileAsync();
         title = profile.BlogTitle;
         subtitle = profile.Subtitle;
 
-        catalogs = await Http.GetJsonAsync<CatalogViewModel[]>("api/Catalog");
+        catalogs = await API.GetCatalogsAsync();
     }
 }
