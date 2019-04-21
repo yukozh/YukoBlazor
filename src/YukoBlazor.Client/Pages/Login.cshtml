@@ -1,5 +1,6 @@
 ﻿@page "/manage/login"
 @inject IdentityContainer ID
+@inject Microsoft.AspNetCore.Components.Services.IUriHelper UriHelper
 
 <div id="main-wrapper">
     <div class="main section" id="main">
@@ -13,7 +14,7 @@
                     <input bind="@password" class="textbox" placeholder="Password" type="password" />
                 </p>
                 <p>
-                    <input onclick="@(() => ID.SetIdentity(username, password))" class="button" value="Login" type="button" />
+                    <input onclick="@(() => SetIdentity())" class="button" value="Login" type="button" />
                 </p>
             </div>
         </div>
@@ -25,4 +26,10 @@
 {
     string username;
     string password;
+
+    private void SetIdentity()
+    {
+        ID.SetIdentity(username, password);
+        UriHelper.NavigateTo("/");
+    }
 }
