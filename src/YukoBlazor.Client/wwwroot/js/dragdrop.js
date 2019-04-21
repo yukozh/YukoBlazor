@@ -738,7 +738,16 @@ function DropEnable() {
             },
                 function (result) {
                     smde.codemirror.setSelection(begin_pos, end_pos);
-                    smde.codemirror.replaceSelection('![' + result.fileName + '](/api/file/' + result.id + ')');
+                    var lower = result.fileName.toLowerCase();
+                    if (lower.endsWith(".jpg")
+                        || lower.endsWith(".jpeg")
+                        || lower.endsWith(".bmp")
+                        || lower.endsWith(".png")) {
+                        smde.codemirror.replaceSelection('![' + result.fileName + '](/api/file/' + result.id + ')');
+                    }
+                    else {
+                        smde.codemirror.replaceSelection('[' + result.fileName + '](/api/file/' + result.id + ')');
+                    }
                 });
         }
     });
