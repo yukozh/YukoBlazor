@@ -46,6 +46,8 @@ namespace YukoBlazor.Client.Tests
 
             WebDriver = new ChromeDriver();
             WebDriver.Url = bind;
+            WebDriver.Manage().Window.Size = new System.Drawing.Size(1200, 600);
+            Task.Delay(400).Wait();
         }
 
         public async Task<IWebElement> WaitForElementAsync(By by, int timeout = 30000)
@@ -90,6 +92,10 @@ namespace YukoBlazor.Client.Tests
                     var x = element.Displayed;
                 }
                 catch (StaleElementReferenceException)
+                {
+                    return true;
+                }
+                catch(ElementNotInteractableException)
                 {
                     return true;
                 }
