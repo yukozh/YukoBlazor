@@ -1,41 +1,39 @@
 ﻿@inject ApiClient API
 @inject IJSRuntime JsRuntime
 
-<div id="main-wrapper">
-    <div class="main section" id="main">
-        <div class="widget Blog" data-version="1" id="Blog1">
-            <div class="blog-posts hfeed">
-
-                @if (posts != null)
-                {
+@if (posts != null)
+{
+    <div id="main-wrapper">
+        <div class="main section" id="main">
+            <div class="widget Blog" data-version="1" id="Blog1">
+                <div class="blog-posts hfeed">
                     @foreach (var x in posts)
                     {
                         <PostMainBody PostModel="@x" ShowReadMore="true" />
                     }
-                }
-            </div>
-            <div class="blog-pager" id="blog-pager">
-                <div class="showpageArea">
-                    <span style="COLOR: #000;" class="showpageOf"> Pages (@totalPages)</span>
-                    @for (var i = 1; i <= totalPages; ++i)
-                    {
-                        if (p == i)
+                </div>
+                <div class="blog-pager" id="blog-pager">
+                    <div class="showpageArea">
+                        <span style="COLOR: #000;" class="showpageOf"> Pages (@totalPages)</span>
+                        @for (var i = 1; i <= totalPages; ++i)
                         {
-                            <span class="showpagePoint">@i</span>
+                            if (p == i)
+                            {
+                                <span class="showpagePoint">@i</span>
+                            }
+                            else
+                            {
+                                <span class="showpageNum">
+                                    <a href="@BuildLink(i)">@i</a>
+                                </span>
+                            }
                         }
-                        else
-                        {
-                            <span class="showpageNum">
-                                <a href="@BuildLink(i)">@i</a>
-                            </span>
-                        }
-                    }
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
-
+}
 
 @functions
 {

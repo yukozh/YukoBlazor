@@ -5,118 +5,118 @@
 @inject IdentityContainer ID
 @inject AppState State
 
-<div id="main-wrapper">
-    <div class="main section" id="main">
-        <div class="widget Blog" data-version="1" id="Blog1">
-            <div class="blog-posts hfeed">
-                @if (post != null)
-                {
+@if (post != null)
+{
+    <div id="main-wrapper">
+        <div class="main section" id="main">
+            <div class="widget Blog" data-version="1" id="Blog1">
+                <div class="blog-posts hfeed">
                     <PostMainBody PostModel="@post" />
-                }
-            </div>
+                </div>
 
-            <div id="lstComments" class="comments">
-                <a name="comments"></a>
-                <h4> @count comments: </h4>
-                <div class="comments-content">
-                    <div id="comment-holder">
-                        <div class="comment-thread toplevel-thread">
-                            @if (comments != null)
-                            {
-                                <ol id="top-ra">
-                                    @foreach (var x in comments)
-                                    {
-                                    <li class="comment">
-                                        <div>
-                                            <div class="avatar-image-container">
-                                                <img src="@x.AvatarUrl" alt="" />
-                                            </div>
-                                            <div class="comment-block">
-                                                <div class="comment-header">
-                                                    <cite class="user">
-                                                        @if (x.IsOwner)
-                                                        {
-                                                            <span class="author">Author</span>
-                                                        }
-                                                        @x.Name
-                                                    </cite>
-                                                    <span class="icon user"></span>
-                                                    <span class="datetime secondary-text">@x.Time.ToString("MMM dd yyyy HH:mm")</span>
-                                                </div>
-                                                <div>
-                                                    @((MarkupString)x.Content)
-                                                </div>
-                                                <span class="comment-actions secondary-text">
-                                                    <a class="comment-reply" onclick="@(() => SetCommentScope(false, x.Id))"><i class="fa fa-comment"></i></a>
-                                                </span>
-                                                @if (ID.IsAuthenticated)
-                                                {
-                                                    <span class="comment-actions secondary-text" onclick="@(() => DeleteCommentAsync(@x.Id))">
-                                                        <a class="comment-reply"><i class="fa fa-trash"></i></a>
-                                                    </span>
-                                                }
-                                            </div>
-                                            <div style="margin-top:55px; padding-left:85px;" id="comment-@x.Id"></div>
-                                        </div>
-                                        @if (x.InnerComments != null && x.InnerComments.Count() > 0)
+                <div id="lstComments" class="comments">
+                    <a name="comments"></a>
+                    <h4> @count comments: </h4>
+                    <div class="comments-content">
+                        <div id="comment-holder">
+                            <div class="comment-thread toplevel-thread">
+                                @if (comments != null)
+                                {
+                                    <ol id="top-ra">
+                                        @foreach (var x in comments)
                                         {
-                                            <div class="comment-replies">
-                                                <div class="comment-thread inline-thread">
-                                                    <span class="thread-toggle thread-expanded"><span class="thread-arrow"></span><span class="thread-count">Replies</span></span>
-                                                    <ol class="thread-chrome thread-expanded">
-                                                        <div>
-                                                            @foreach (var y in x.InnerComments)
-                                                            {
-                                                                <li class="comment">
-                                                                    <div class="avatar-image-container">
-                                                                        <img src="@y.AvatarUrl" alt="" />
-                                                                    </div>
-                                                                    <div class="comment-block">
-                                                                        <div class="comment-header">
-                                                                            <cite class="user">
-                                                                                @if (y.IsOwner)
-                                                                                {
-                                                                                    <span class="author">Author</span>
-                                                                                }
-                                                                                @y.Name
-                                                                            </cite>
-                                                                            <span class="icon user "></span>
-                                                                            <span class="datetime secondary-text">@y.Time.ToString("MMM dd yyyy HH:mm")</span>
-                                                                        </div>
-                                                                        <div>
-                                                                            @((MarkupString)y.Content)
-                                                                        </div>
-                                                                        @if (ID.IsAuthenticated)
-                                                                        {
-                                                                            <span class="comment-actions secondary-text" onclick="@(() => DeleteCommentAsync(@y.Id))">
-                                                                                <a class="comment-reply"><i class="fa fa-trash"></i></a>
-                                                                            </span>
-                                                                        }
-                                                                    </div>
-                                                                </li>
-                                                            }
+                                            <li class="comment">
+                                                <div>
+                                                    <div class="avatar-image-container">
+                                                        <img src="@x.AvatarUrl" alt="" />
+                                                    </div>
+                                                    <div class="comment-block">
+                                                        <div class="comment-header">
+                                                            <cite class="user">
+                                                                @if (x.IsOwner)
+                                                                {
+                                                                    <span class="author">Author</span>
+                                                                }
+                                                                @x.Name
+                                                            </cite>
+                                                            <span class="icon user"></span>
+                                                            <span class="datetime secondary-text">@x.Time.ToString("MMM dd yyyy HH:mm")</span>
                                                         </div>
-                                                    </ol>
+                                                        <div>
+                                                            @((MarkupString)x.Content)
+                                                        </div>
+                                                        <span class="comment-actions secondary-text">
+                                                            <a class="comment-reply" onclick="@(() => SetCommentScope(false, x.Id))"><i class="fa fa-comment"></i></a>
+                                                        </span>
+                                                        @if (ID.IsAuthenticated)
+                                                        {
+                                                            <span class="comment-actions secondary-text" onclick="@(() => DeleteCommentAsync(@x.Id))">
+                                                                <a class="comment-reply"><i class="fa fa-trash"></i></a>
+                                                            </span>
+                                                        }
+                                                    </div>
+                                                    <div style="margin-top:55px; padding-left:85px;" id="comment-@x.Id"></div>
                                                 </div>
+                                                @if (x.InnerComments != null && x.InnerComments.Count() > 0)
+                                                {
+                                                    <div class="comment-replies">
+                                                        <div class="comment-thread inline-thread">
+                                                            <span class="thread-toggle thread-expanded"><span class="thread-arrow"></span><span class="thread-count">Replies</span></span>
+                                                            <ol class="thread-chrome thread-expanded">
+                                                                <div>
+                                                                    @foreach (var y in x.InnerComments)
+                                                                    {
+                                                                        <li class="comment">
+                                                                            <div class="avatar-image-container">
+                                                                                <img src="@y.AvatarUrl" alt="" />
+                                                                            </div>
+                                                                            <div class="comment-block">
+                                                                                <div class="comment-header">
+                                                                                    <cite class="user">
+                                                                                        @if (y.IsOwner)
+                                                                                        {
+                                                                                            <span class="author">Author</span>
+                                                                                        }
+                                                                                        @y.Name
+                                                                                    </cite>
+                                                                                    <span class="icon user "></span>
+                                                                                    <span class="datetime secondary-text">@y.Time.ToString("MMM dd yyyy HH:mm")</span>
+                                                                                </div>
+                                                                                <div>
+                                                                                    @((MarkupString)y.Content)
+                                                                                </div>
+                                                                                @if (ID.IsAuthenticated)
+                                                                                {
+                                                                                    <span class="comment-actions secondary-text" onclick="@(() => DeleteCommentAsync(@y.Id))">
+                                                                                        <a class="comment-reply"><i class="fa fa-trash"></i></a>
+                                                                                    </span>
+                                                                                }
+                                                                            </div>
+                                                                        </li>
+                                                                    }
+                                                                </div>
+                                                            </ol>
+                                                        </div>
+                                                    </div>
+                                                }
+                                            </li>
+                                        }
+                                    </ol>
+                                }
+                                <div id="top-continue" class="continue">
+                                    <a class="comment-reply link" target="_self" onclick="@(() => SetCommentScope())">Add comment</a>
+                                    <div id="comment-box">
+                                        @if (!ID.IsAuthenticated)
+                                        {
+                                            <div>
+                                                <input bind="@nickname" type="text" class="textbox" placeholder="Nickname" />
+                                                <input bind="@email" type="email" class="textbox" placeholder="Email" />
                                             </div>
                                         }
-                                    </li>
-                                    }
-                                </ol>
-                            }
-                            <div id="top-continue" class="continue">
-                                <a class="comment-reply link" target="_self" onclick="@(() => SetCommentScope())">Add comment</a>
-                                <div id="comment-box">
-                                    @if (!ID.IsAuthenticated)
-                                    {
-                                        <div>
-                                            <input bind="@nickname" type="text" class="textbox" placeholder="Nickname" />
-                                            <input bind="@email" type="email" class="textbox" placeholder="Email" />
+                                        <MarkdownEditor content="" id="txtContent" />
+                                        <div style="margin-top: 15px">
+                                            <a class="button" onclick="@PostCommentAsync">Add comment</a>
                                         </div>
-                                    }
-                                    <MarkdownEditor content="" id="txtContent" />
-                                    <div style="margin-top: 15px">
-                                        <a class="button" onclick="@PostCommentAsync">Add comment</a>
                                     </div>
                                 </div>
                             </div>
@@ -126,8 +126,7 @@
             </div>
         </div>
     </div>
-</div>
-
+}
 
 @functions
 {
