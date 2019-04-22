@@ -3316,3 +3316,16 @@ nav#nav-mobile {
     margin-left: 5px;
     text-align: center;
 }
+
+.table {
+    width: 100%;
+    background: none;
+}
+
+    .table th {
+        background: none;
+    }
+
+    .table .textbox {
+        width: calc(100% - 15px);
+    }

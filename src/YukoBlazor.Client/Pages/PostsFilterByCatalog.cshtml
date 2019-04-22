@@ -1,0 +1,10 @@
+﻿@page "/catalog/{catalog}"
+@page "/catalog/{catalog}/p/{p}"
+
+<PostListBody p="@p" catalog="@catalog" />
+
+@functions
+{
+    [Parameter] string catalog { get; set; }
+    [Parameter] int p { get; set; } = 1;
+}

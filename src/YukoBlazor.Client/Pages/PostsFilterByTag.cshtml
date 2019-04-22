@@ -1,0 +1,10 @@
+﻿@page "/tag/{tag}"
+@page "/tag/{tag}/p/{p}"
+
+<PostListBody p="@p" tag="@tag" />
+
+@functions
+{
+    [Parameter] string tag { get; set; }
+    [Parameter] int p { get; set; } = 1;
+}

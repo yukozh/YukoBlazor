@@ -1,4 +1,5 @@
 ﻿@inject ApiClient API
+@inject AppState State
 
 <div id='header-wrapper'>
     <div class='header section' id='header'>
@@ -40,7 +41,12 @@
         var profile = await API.GetProfileAsync();
         title = profile.BlogTitle;
         subtitle = profile.Subtitle;
-
         catalogs = await API.GetCatalogsAsync();
+        State.OnStateChanged += () => { StateHasChanged(); };
+        State.OnCatalogUpdated += async () =>
+        {
+            catalogs = await API.GetCatalogsAsync();
+            StateHasChanged();
+        };
     }
 }

@@ -81,6 +81,9 @@
                 </h2>
                 <div>
                     <p>
+                        <a dir="ltr" href="/manage/catalogs">Catalogs</a>
+                    </p>
+                    <p>
                         <a dir="ltr" onclick="@(() => { ID.RemoveIdentity(); })">Logout</a>
                     </p>
                     <div class="clear"></div>
@@ -101,5 +104,10 @@
         tags = await API.GetTagsAsync();
         calendars = await API.GetCalendarAsync();
         State.OnStateChanged += () => { StateHasChanged(); };
+        State.OnCatalogUpdated += async () =>
+        {
+            catalogs = await API.GetCatalogsAsync();
+            StateHasChanged();
+        };
     }
 }

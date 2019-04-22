@@ -6,9 +6,16 @@ namespace YukoBlazor.ApiInvoker
     {
         public event Action OnStateChanged;
 
+        public event Action OnCatalogUpdated;
+
         public void TriggerStateChange()
         {
             OnStateChanged?.Invoke();
+        }
+
+        public void TriggerOnCatalogUpdate()
+        {
+            OnCatalogUpdated?.Invoke();
         }
     }
 }

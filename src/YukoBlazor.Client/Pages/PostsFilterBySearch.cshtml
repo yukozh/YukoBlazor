@@ -1,0 +1,10 @@
+﻿@page "/search/{search}"
+@page "/search/{search}/p/{p}"
+
+<PostListBody p="@p" search="@search" />
+
+@functions
+{
+    [Parameter] string search { get; set; }
+    [Parameter] int p { get; set; } = 1;
+}

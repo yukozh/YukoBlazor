@@ -18,7 +18,7 @@ namespace YukoBlazor.ApiInvoker
             return await client.GetJsonAsync<IEnumerable<CatalogViewModel>>("/api/Catalog");
         }
 
-        public async Task CreateCatalogAsync(
+        public async Task PutCatalogAsync(
             string url, string text, int priority = 0, CancellationToken token = default)
         {
             using (var content = new FormUrlEncodedContent(new Dictionary<string, string>

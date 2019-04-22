@@ -1,0 +1,106 @@
+﻿@page "/manage/catalogs"
+@inject ApiClient API
+@inject AppState  State
+@inject IdentityContainer ID
+@inject Microsoft.AspNetCore.Components.Services.IUriHelper UriHelper
+
+<div id="main-wrapper">
+    <div class="main section" id="main">
+        <div class="widget Blog" data-version="1" id="Blog1">
+            <div class="blog-posts hfeed">
+                <h4>Catalogs</h4>
+                <table class="table">
+                    <colgroup>
+                        <col />
+                        <col />
+                        <col />
+                        <col style="width: 165px" />
+                    </colgroup>
+                    <thead>
+                        <tr>
+                            <th>URL</th>
+                            <th>Display</th>
+                            <th>Priority</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (catalogs != null)
+                        {
+                            @foreach (var x in catalogs)
+                            {
+                                <tr>
+                                    <td>@x.Id</td>
+                                    <td><input class="textbox" bind="@x.Display" /></td>
+                                    <td><input class="textbox" bind="@x.Priority" /></td>
+                                    <td>
+                                        <a class="button" onclick="@(() => PatchCatalogAsync(x))">Save</a>
+                                        <a class="button" onclick="@(() => DeleteCatalogAsync(x))">Remove</a>
+                                    </td>
+                                </tr>
+                            }
+                            <tr>
+                                <td><input class="textbox" bind="@newUrl" placeholder="URL" /></td>
+                                <td><input class="textbox" bind="@newDisplay" placeholder="Display" /></td>
+                                <td><input class="textbox" bind="@newPriority" placeholder="Priority" /></td>
+                                <td>
+                                    <a class="button" onclick="@PutCatalogAsync">Add Catalog</a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@functions
+{
+    string newUrl;
+    string newDisplay;
+    int newPriority;
+    IEnumerable<CatalogViewModel> catalogs;
+
+    private async Task DeleteCatalogAsync(CatalogViewModel model)
+    {
+        await API.DeleteCatalogAsync(model.Id);
+        await OnInitAsync();
+        newUrl = string.Empty;
+        newDisplay = string.Empty;
+        newPriority = 0;
+        State.TriggerOnCatalogUpdate();
+    }
+
+    private async Task PatchCatalogAsync(CatalogViewModel model)
+    {
+        await API.PatchCatalogAsync(model.Id, model.Display, model.Priority);
+        await OnInitAsync();
+        newUrl = string.Empty;
+        newDisplay = string.Empty;
+        newPriority = 0;
+        State.TriggerOnCatalogUpdate();
+    }
+
+    private async Task PutCatalogAsync()
+    {
+        await API.PutCatalogAsync(newUrl, newDisplay, newPriority);
+        await OnInitAsync();
+        newUrl = string.Empty;
+        newDisplay = string.Empty;
+        newPriority = 0;
+        State.TriggerOnCatalogUpdate();
+    }
+
+    protected override async Task OnInitAsync()
+    {
+        if (!ID.IsAuthenticated)
+        {
+            UriHelper.NavigateTo("/manage/login");
+        }
+
+        catalogs = await API.GetCatalogsAsync();
+        State.OnStateChanged += () => { StateHasChanged(); };
+    }
+}

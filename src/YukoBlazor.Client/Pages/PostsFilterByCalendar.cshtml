@@ -1,0 +1,11 @@
+﻿@page "/year/{year}/month/{month}"
+@page "/year/{year}/month/{month}/p/{p}"
+
+<PostListBody p="@p" year="@year" month="@month" />
+
+@functions
+{
+    [Parameter] int year { get; set; }
+    [Parameter] int month { get; set; }
+    [Parameter] int p { get; set; } = 1;
+}
