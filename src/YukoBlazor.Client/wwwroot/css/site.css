@@ -3333,3 +3333,9 @@ a {
 .post-body img {
     max-width: 100%;
 }
+
+@media screen and (max-width: 1110px) {
+    #rsidebar-wrapper, #nav-trigger {
+        display: none!important;
+    }
+}
