@@ -8,6 +8,7 @@ using System.Net.Http;
 using Microsoft.AspNetCore.Hosting;
 using Newtonsoft.Json;
 using YukoBlazor.Server.Controllers;
+using YukoBlazor.ApiInvoker;
 using Xunit;
 
 [assembly: CollectionBehavior(DisableTestParallelization = true)]
@@ -28,6 +29,8 @@ namespace YukoBlazor.Server.Tests
             BaseAddress = new Uri(bind),
             Timeout = new TimeSpan(0, 0, 3)
         };
+        protected static readonly IdentityContainer ID = new IdentityContainer(Client, new AppState());
+        protected static readonly ApiClient API = new ApiClient(Client, ID);
 
         public WebApiTestBase()
         {
