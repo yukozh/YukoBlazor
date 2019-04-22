@@ -76,7 +76,8 @@ namespace YukoBlazor.Client.Tests
 
         public void Dispose()
         {
-            Host.Dispose();
+            WebDriver?.Dispose();
+            Host?.Dispose();
             EnsureDbFileRemoved();
         }
 
