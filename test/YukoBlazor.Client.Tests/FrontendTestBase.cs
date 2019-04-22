@@ -55,7 +55,7 @@ namespace YukoBlazor.Client.Tests
             {
                 if (timeused > timeout)
                 {
-                    throw new TimeoutException();
+                    return null;
                 }
 
                 try
@@ -75,6 +75,31 @@ namespace YukoBlazor.Client.Tests
             }
         }
 
+        public async Task<bool> WaitForElementDisappearAsync(IWebElement element, int timeout = 30000)
+        {
+            var timeused = 0;
+            while (true)
+            {
+                if (timeused > timeout)
+                {
+                    return false;
+                }
+
+                try
+                {
+                    var x = element.Displayed;
+                }
+                catch (StaleElementReferenceException)
+                {
+                    return true;
+                }
+
+                await Task.Delay(200);
+                timeused += 200;
+                continue;
+            }
+        }
+
         public async Task LoginAsync(string username, string password)
         {
             WebDriver.Url = Bind + "/manage/login";
@@ -86,11 +111,7 @@ namespace YukoBlazor.Client.Tests
             var btnLogin = await WaitForElementAsync(By.Id("button-login"));
             btnLogin.Click();
 
-            try
-            {
-                await WaitForElementAsync(By.Id("sidebar-manage"), 1000);
-            }
-            catch(TimeoutException)
+            if (await WaitForElementAsync(By.Id("sidebar-manage"), 1000) == null)
             {
                 throw new InvalidCredentialException();
             }

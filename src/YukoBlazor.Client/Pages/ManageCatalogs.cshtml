@@ -31,20 +31,20 @@
                             {
                                 <tr>
                                     <td>@x.Id</td>
-                                    <td><input class="textbox" bind="@x.Display" /></td>
-                                    <td><input class="textbox" bind="@x.Priority" /></td>
+                                    <td><input class="textbox textbox-edit-display" bind="@x.Display" /></td>
+                                    <td><input class="textbox textbox-edit-priority" bind="@x.Priority" /></td>
                                     <td>
-                                        <a class="button" onclick="@(() => PatchCatalogAsync(x))">Save</a>
-                                        <a class="button" onclick="@(() => DeleteCatalogAsync(x))">Remove</a>
+                                        <a class="button button-save-catalog" onclick="@(() => PatchCatalogAsync(x))">Save</a>
+                                        <a class="button button-delete-catalog" onclick="@(() => DeleteCatalogAsync(x))">Remove</a>
                                     </td>
                                 </tr>
                             }
                             <tr>
-                                <td><input class="textbox" bind="@newUrl" placeholder="URL" /></td>
-                                <td><input class="textbox" bind="@newDisplay" placeholder="Display" /></td>
-                                <td><input class="textbox" bind="@newPriority" placeholder="Priority" /></td>
+                                <td><input id="textbox-add-url" class="textbox" bind="@newUrl" placeholder="URL" /></td>
+                                <td><input id="textbox-add-display" class="textbox" bind="@newDisplay" placeholder="Display" /></td>
+                                <td><input id="textbox-add-priority" class="textbox" bind="@newPriority" placeholder="Priority" /></td>
                                 <td>
-                                    <a class="button" onclick="@PutCatalogAsync">Add Catalog</a>
+                                    <a id="button-add-catalog" class="button" onclick="@PutCatalogAsync">Add Catalog</a>
                                 </td>
                             </tr>
                         }
