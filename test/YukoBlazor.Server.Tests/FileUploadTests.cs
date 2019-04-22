@@ -5,6 +5,7 @@ using System.Net;
 using System.Net.Http;
 using Newtonsoft.Json;
 using YukoBlazor.Server.Controllers;
+using YukoBlazor.Shared;
 using Xunit;
 
 namespace YukoBlazor.Server.Tests
@@ -56,7 +57,7 @@ namespace YukoBlazor.Server.Tests
                     Exception exception = null;
                     try
                     { 
-                        var guid = JsonConvert.DeserializeObject<Guid>(text);
+                        var guid = JsonConvert.DeserializeObject<FileUploadResult>(text).Id;
                     }
                     catch(Exception ex)
                     {
@@ -149,7 +150,7 @@ namespace YukoBlazor.Server.Tests
             });
             using (var response = await Client.PostAsync("/api/File", content))
             {
-                id = JsonConvert.DeserializeObject<Guid>(await response.Content.ReadAsStringAsync());
+                id = JsonConvert.DeserializeObject<FileUploadResult>(await response.Content.ReadAsStringAsync()).Id;
             }
 
             // Act
