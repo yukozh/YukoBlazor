@@ -8,13 +8,23 @@ namespace YukoBlazor.Client.Tests
     public class LoginTests : FrontendTestBase
     {
         [Fact]
-        public async Task LoginSuccessTest()
+        public async Task LoginAndLogoutTest()
         {
             // Arrange
             await LoginAsync("root", "123456");
 
             // Assert
-            Assert.NotNull(await WaitForElementAsync(By.Id("sidebar-manage")));
+            var manageLabel = await WaitForElementAsync(By.Id("sidebar-manage"));
+            Assert.NotNull(manageLabel);
+
+            // Arrange
+            var btnLogout = await WaitForElementAsync(By.Id("link-manage-logout"));
+
+            // Act
+            btnLogout.Click();
+
+            // Assert
+            Assert.True(await WaitForElementDisappearAsync(manageLabel));
         }
 
         [Fact]
