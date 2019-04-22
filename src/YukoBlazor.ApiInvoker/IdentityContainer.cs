@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Net.Http;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace YukoBlazor.ApiInvoker
 {
@@ -34,11 +36,20 @@ namespace YukoBlazor.ApiInvoker
             }
         }
 
-        public void SetIdentity(string username, string password)
+        public async Task<bool> SetIdentityAsync(
+            string username, string password, CancellationToken token = default)
         {
             RemoveIdentity();
-            client.DefaultRequestHeaders.Add("Authorization", $"Yuko {username} {password}");
-            state.TriggerStateChange();
+            if (await client.GetStringAsync($"/api/State?usr={username}&pwd={password}") == "Authenticated")
+            {
+                client.DefaultRequestHeaders.Add("Authorization", $"Yuko {username} {password}");
+                state.TriggerStateChange();
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
     }
 }

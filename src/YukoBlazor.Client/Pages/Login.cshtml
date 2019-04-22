@@ -30,8 +30,7 @@
 
     private async Task SetIdentityAsync()
     {
-        ID.SetIdentity(username, password);
-        if (await API.ValidateIdentityAsync(username, password))
+        if (await ID.SetIdentityAsync(username, password))
         {
             UriHelper.NavigateTo("/");
         }

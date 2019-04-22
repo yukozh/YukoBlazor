@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using System.Threading.Tasks;
 using System.Net.Http;
+using System.Security.Authentication;
 using Microsoft.AspNetCore.Hosting;
 using YukoBlazor.Server.Controllers;
 using OpenQA.Selenium;
@@ -72,6 +73,29 @@ namespace YukoBlazor.Client.Tests
                     continue;
                 }
             }
+        }
+
+        public async Task LoginAsync(string username, string password)
+        {
+            WebDriver.Url = Bind + "/manage/login";
+            var txtUsername = await WaitForElementAsync(By.Id("textbox-username"));
+            txtUsername.SendKeys(username);
+            var txtPassword = await WaitForElementAsync(By.Id("textbox-password"));
+            txtPassword.SendKeys(password);
+
+            var btnLogin = await WaitForElementAsync(By.Id("button-login"));
+            btnLogin.Click();
+
+            try
+            {
+                await WaitForElementAsync(By.Id("sidebar-manage"), 1000);
+            }
+            catch(TimeoutException)
+            {
+                throw new InvalidCredentialException();
+            }
+
+            return;
         }
 
         public void Dispose()
