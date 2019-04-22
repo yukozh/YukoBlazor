@@ -1,4 +1,7 @@
 ﻿@using Pomelo.Marked
+@inject ApiClient API
+@inject IdentityContainer ID
+@inject Microsoft.AspNetCore.Components.Services.IUriHelper UriHelper
 
 <div class="post-outer">
     <div class="wrapfullpost">
@@ -28,6 +31,17 @@
                         }
                     </span>
                 }
+                @if (!ShowReadMore && ID.IsAuthenticated)
+                {
+                    <span class="meta_labels">
+                        <i class="fa fa-edit"></i>
+                        <a href="/manage/post/@PostModel.Url" rel="tag">Edit</a>
+                    </span>
+                    <span class="meta_labels">
+                        <i class="fa fa-trash"></i>
+                        <a onclick="@DeletePostAsync" rel="tag">Remove</a>
+                    </span>
+                }
             </div>
             <div class="post-header-line-1"></div>
             <div class="post-body entry-content">
@@ -50,4 +64,10 @@
 {
     [Parameter] PostViewModel PostModel { get; set; }
     [Parameter] bool ShowReadMore { get; set; } = false;
+
+    private async Task DeletePostAsync()
+    {
+        await API.DeletePostAsync(PostModel.Url);
+        UriHelper.NavigateTo("/");
+    }
 }

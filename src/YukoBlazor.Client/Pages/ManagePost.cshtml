@@ -1,0 +1,144 @@
+﻿@page "/manage/post"
+@page "/manage/post/{id}"
+@inject IJSRuntime JsRuntime
+@inject ApiClient API
+@inject IdentityContainer ID
+@inject AppState State
+@inject Microsoft.AspNetCore.Components.Services.IUriHelper UriHelper
+
+@if (post != null)
+{
+    <div id="main-wrapper">
+        <div class="main section" id="main">
+            <div class="widget Blog" data-version="1" id="Blog1">
+                <div class="blog-posts hfeed">
+                    <div class="post-outer">
+                        <div class="wrapfullpost">
+                            <div class="post hentry">
+                                <div class="post-title entry-title">
+                                    <label>
+                                        URL<br />
+                                        <input type="text" placeholder="URL" class="textbox" bind="@post.Url" />
+                                    </label>
+                                </div>
+                                <div class="post-title entry-title">
+                                    <label>
+                                        Title<br />
+                                        <input type="text" placeholder="Title" class="textbox" bind="@post.Title" />
+                                    </label>
+                                </div>
+                                <div class="post-body entry-content">
+                                    <MarkdownEditor content="@post?.Content" id="txtPost" />
+                                    <div style="clear: both;"></div>
+                                </div>
+                                <div style="margin-top: 10px">
+                                    <label>
+                                        Catalog
+                                        <br />
+                                        <select bind="@catalogId" class="textbox">
+                                            <option value="">Uncataloged</option>
+                                            @if (catalogs != null)
+                                            {
+                                                @foreach (var x in catalogs)
+                                                {
+                                                    <option value="@x.Id">@x.Display</option>
+                                                }
+                                            }
+                                        </select>
+                                    </label>
+                                </div>
+                                <div style="margin-top: 10px">
+                                    <label>
+                                        Tags<br />
+                                        <input type="text" class="textbox" style="width: 75%" bind="@tags" placeholder="Tags, to use ',' to split multi tags." />
+                                    </label>
+                                </div>
+                                <div style="margin-top: 10px">
+                                    <label>
+                                        Is Page?
+                                        <br />
+                                        <select bind="@post.IsPage" class="textbox">
+                                            <option value="false">No</option>
+                                            <option value="true">Yes</option>
+                                        </select>
+                                    </label>
+                                </div>
+                                <div style="margin-top: 15px">
+                                    @if (string.IsNullOrEmpty(id))
+                                    {
+                                        <a class="button" onclick="@PutPostAsync">Create Post</a>
+                                    }
+                                    else
+                                    {
+                                        <a class="button" onclick="@PatchPostAsync">Save</a>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+
+@functions
+{
+    PostViewModel post;
+    IEnumerable<CatalogViewModel> catalogs;
+    string oldUrl;
+
+    [Parameter] string id { get; set; }
+
+    string catalogId = "";
+    string tags = "";
+
+    private async Task PatchPostAsync()
+    {
+        await API.PatchPostAsync(
+            oldUrl, post.Url, post.Title, await GetEditorValueAsync("txtPost"),
+            catalogId, tags, post.IsPage);
+        State.TriggerTagsUpdate();
+        UriHelper.NavigateTo($"/post/{post.Url}");
+    }
+
+    private async Task PutPostAsync()
+    {
+        await API.PutPostAsync(
+            post.Url, post.Title, await GetEditorValueAsync("txtPost"),
+            catalogId, tags, post.IsPage);
+
+        State.TriggerTagsUpdate();
+        UriHelper.NavigateTo($"/post/{post.Url}");
+    }
+
+    protected override async Task OnInitAsync()
+    {
+        catalogs = await API.GetCatalogsAsync();
+
+        if (!string.IsNullOrEmpty(id))
+        {
+            post = await API.GetPostAsync(id);
+            tags = post.Tags == null ? "" : string.Join(", ", post.Tags);
+            catalogId = post.Catalog?.Id;
+        }
+        else
+        {
+            post = new PostViewModel();
+        }
+
+        oldUrl = post.Url;
+    }
+
+    private async Task<string> GetEditorValueAsync(string id)
+    {
+        return await JsRuntime.InvokeAsync<string>("getSmdeValue", id);
+    }
+
+    private async Task ClearEditorValueAsync(string id)
+    {
+        await JsRuntime.InvokeAsync<object>("clearSmdeValue", id);
+    }
+}

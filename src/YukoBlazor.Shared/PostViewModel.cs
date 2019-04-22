@@ -12,5 +12,6 @@ namespace YukoBlazor.Shared
         public IEnumerable<string> Tags { get; set; }
         public Catalog Catalog { get; set; }
         public string Url { get; set; }
+        public bool IsPage { get; set; }
     }
 }

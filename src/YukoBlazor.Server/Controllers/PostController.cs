@@ -73,7 +73,8 @@ namespace YukoBlazor.Server.Controllers
                     Tags = x.Tags.Select(y => y.Tag),
                     Time = x.Time,
                     Title = x.Title,
-                    Url = x.Url
+                    Url = x.Url,
+                    IsPage = x.IsPage
                 })
             });
         }
@@ -103,7 +104,8 @@ namespace YukoBlazor.Server.Controllers
                     Tags = post.Tags.Select(y => y.Tag),
                     Time = post.Time,
                     Title = post.Title,
-                    Url = post.Url
+                    Url = post.Url,
+                    IsPage = post.IsPage
                 });
             }
         }
@@ -256,6 +258,8 @@ namespace YukoBlazor.Server.Controllers
             }
 
             var post = await db.Posts
+                .Include(x => x.Comments)
+                .ThenInclude(x => x.InnerComments)
                 .SingleOrDefaultAsync(x => x.Url == url, token);
 
             if (post == null)
@@ -264,6 +268,11 @@ namespace YukoBlazor.Server.Controllers
                 return Json("Post is not exist");
             }
 
+            if (post.Comments != null)
+            {
+                db.Comments.RemoveRange(post.Comments.SelectMany(x => x.InnerComments));
+                db.Comments.RemoveRange(post.Comments);
+            }
             db.Posts.Remove(post);
             await db.SaveChangesAsync(token);
             return Json(true);

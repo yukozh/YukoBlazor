@@ -29,5 +29,7 @@ namespace YukoBlazor.Shared
         public virtual Catalog Catalog { get; set; }
 
         public virtual ICollection<PostTag> Tags { get; set; }
+
+        public virtual ICollection<Comment> Comments { get; set; }
     }
 }

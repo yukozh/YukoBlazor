@@ -70,7 +70,7 @@
         newUrl = string.Empty;
         newDisplay = string.Empty;
         newPriority = 0;
-        State.TriggerOnCatalogUpdate();
+        State.TriggerCatalogUpdate();
     }
 
     private async Task PatchCatalogAsync(CatalogViewModel model)
@@ -80,7 +80,7 @@
         newUrl = string.Empty;
         newDisplay = string.Empty;
         newPriority = 0;
-        State.TriggerOnCatalogUpdate();
+        State.TriggerCatalogUpdate();
     }
 
     private async Task PutCatalogAsync()
@@ -90,7 +90,7 @@
         newUrl = string.Empty;
         newDisplay = string.Empty;
         newPriority = 0;
-        State.TriggerOnCatalogUpdate();
+        State.TriggerCatalogUpdate();
     }
 
     protected override async Task OnInitAsync()
@@ -101,6 +101,10 @@
         }
 
         catalogs = await API.GetCatalogsAsync();
-        State.OnStateChanged += () => { StateHasChanged(); };
+        State.OnStateChanged += () =>
+        {
+            StateHasChanged();
+            OnInitAsync();
+        };
     }
 }

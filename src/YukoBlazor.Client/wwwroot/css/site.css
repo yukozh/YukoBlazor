@@ -3329,3 +3329,7 @@ nav#nav-mobile {
     .table .textbox {
         width: calc(100% - 15px);
     }
+
+a {
+    cursor: pointer;
+}
