@@ -18,7 +18,6 @@ namespace YukoBlazor.Server.Tests
     public abstract class WebApiTestBase : IDisposable
     {
         private const string bind = "http://localhost:35543";
-        private static readonly Random random = new Random();
 
         protected readonly IWebHost Host;
         protected readonly static string DbPath = Path.Combine(

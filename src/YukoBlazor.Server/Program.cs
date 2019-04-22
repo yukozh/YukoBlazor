@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 
 [assembly: InternalsVisibleTo("YukoBlazor.Server.Tests")]
+[assembly: InternalsVisibleTo("YukoBlazor.Client.Tests")]
 
 namespace YukoBlazor.Server
 {
