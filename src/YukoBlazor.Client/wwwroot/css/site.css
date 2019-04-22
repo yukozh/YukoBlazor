@@ -3278,10 +3278,6 @@ nav#nav-mobile {
     }
 }
 
-.post-body p {
-    margin: 0;
-}
-
 .button {
     background: #ffa902;
     padding: 10px 15px;
@@ -3332,4 +3328,8 @@ nav#nav-mobile {
 
 a {
     cursor: pointer;
+}
+
+.post-body img {
+    max-width: 100%;
 }

@@ -742,7 +742,8 @@ function DropEnable() {
                     if (lower.endsWith(".jpg")
                         || lower.endsWith(".jpeg")
                         || lower.endsWith(".bmp")
-                        || lower.endsWith(".png")) {
+                        || lower.endsWith(".png")
+                        || result.fileName == "file") {
                         smde.codemirror.replaceSelection('![' + result.fileName + '](/api/file/' + result.id + ')');
                     }
                     else {
