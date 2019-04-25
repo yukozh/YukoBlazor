@@ -1,0 +1,45 @@
+﻿@using System.Net
+@inject ApiClient API
+@inject Microsoft.AspNetCore.Components.Services.IUriHelper UriHelper
+
+<footer class='clearfix' id='footer'>
+    <div class='pull-right foot-copyright'>
+        <p class='copy-right'>
+            Powered by <a href="https://github.com/yukozh/YukoBlazor" id='mycontent'>YukoBlazor</a>
+        </p>
+        <p class='copy-right'>
+            <a style="margin-right: 15px" href="manage/login" id='link-manage'>Manage</a>
+        </p>
+    </div>
+    <!-- Social -->
+    <ul class='f-social list-inline'>
+        <li>
+            <a href="https://github.com/@github" target="_blank">
+                <i class='fa fa-github'></i>
+            </a>
+        </li>
+    </ul>
+    <!-- Search -->
+    <div class='qsearchwrap'>
+        <div class='quicksearch'>
+            <button onclick="@SearchPosts"><i class='fa fa-search'></i></button>
+            <input class='text-input' id="textbox-search" bind="@search" placeholder='Search Here..' style='display: inline-block; width: 150px;' type='text' />
+        </div>
+    </div>
+</footer>
+
+@functions {
+    string search;
+    string github;
+
+    protected override async Task OnInitAsync()
+    {
+        var profile = await API.GetProfileAsync();
+        github = profile.GitHub;
+    }
+
+    private void SearchPosts()
+    {
+        UriHelper.NavigateTo($"/search/{WebUtility.UrlEncode(search)}");
+    }
+}
