@@ -1,4 +1,6 @@
-﻿@inherits LayoutComponentBase
+﻿@using System.Net
+@inherits LayoutComponentBase
+@inject Microsoft.AspNetCore.Components.Services.IUriHelper UriHelper
 
 <div id='margin-1200'>
     <NavMenu />
@@ -17,6 +19,9 @@
         <div class='pull-right foot-copyright'>
             <p class='copy-right'>
                 Powered by <a href="https://github.com/yukozh/YukoBlazor" id='mycontent'>YukoBlazor</a>
+            </p>
+            <p class='copy-right'>
+                <a style="margin-right: 15px" href="manage/login" id='link-manage'>Manage</a>
             </p>
         </div>
         <!-- Social -->
@@ -40,10 +45,8 @@
         <!-- Search -->
         <div class='qsearchwrap'>
             <div class='quicksearch'>
-                <form action='/search' method='get'>
-                    <button id='qsearchsubmit'><i class='fa fa-search'></i></button>
-                    <input class='text-input' name='q' placeholder='Search Here..' style='display: inline-block; width: 150px;' type='text' />
-                </form>
+                <button onclick="@SearchPosts"><i class='fa fa-search'></i></button>
+                <input class='text-input' id="textbox-search" bind="@search" placeholder='Search Here..' style='display: inline-block; width: 150px;' type='text' />
             </div>
         </div>
     </footer>
@@ -51,3 +54,12 @@
 <div id='slideshow'>
     <img alt='biz.' class='active' src='img/thebackground.png' />
 </div>
+
+@functions {
+    string search;
+
+    private void SearchPosts()
+    {
+        UriHelper.NavigateTo($"/search/{WebUtility.UrlEncode(search)}");
+    }
+}

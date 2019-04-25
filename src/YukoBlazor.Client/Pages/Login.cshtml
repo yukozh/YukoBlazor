@@ -28,6 +28,16 @@
     string username;
     string password;
 
+    protected override Task OnInitAsync()
+    {
+        if (ID.IsAuthenticated)
+        {
+            UriHelper.NavigateTo("/");
+        }
+
+        return Task.FromResult(true);
+    }
+
     private async Task SetIdentityAsync()
     {
         if (await ID.SetIdentityAsync(username, password))
