@@ -40,6 +40,13 @@
 
     private void SearchPosts()
     {
-        UriHelper.NavigateTo($"/search/{WebUtility.UrlEncode(search)}");
+        if (string.IsNullOrEmpty(search))
+        {
+            UriHelper.NavigateTo("/");
+        }
+        else
+        {
+            UriHelper.NavigateTo($"/search/{WebUtility.UrlEncode(search)}");
+        }
     }
 }
