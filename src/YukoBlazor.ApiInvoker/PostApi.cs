@@ -40,7 +40,7 @@ namespace YukoBlazor.ApiInvoker
 
             if (!string.IsNullOrEmpty(search))
             {
-                conditionBuilder.Append($"&search={HttpUtility.UrlEncode(search)}");
+                conditionBuilder.Append($"&title={HttpUtility.UrlEncode(search)}");
             }
 
             return await client.GetJsonAsync<PagedViewModel<PostViewModel>>("/api/Post/" + conditionBuilder.ToString());
