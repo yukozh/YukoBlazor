@@ -18,13 +18,13 @@
                                 <div class="post-title entry-title">
                                     <label>
                                         URL<br />
-                                        <input type="text" placeholder="URL" class="textbox" bind="@post.Url" />
+                                        <input id="textbox-post-url" type="text" placeholder="URL" class="textbox" bind="@post.Url" />
                                     </label>
                                 </div>
                                 <div class="post-title entry-title">
                                     <label>
                                         Title<br />
-                                        <input type="text" placeholder="Title" class="textbox" bind="@post.Title" />
+                                        <input id="textbox-post-title" type="text" placeholder="Title" class="textbox" bind="@post.Title" />
                                     </label>
                                 </div>
                                 <div class="post-body entry-content">
@@ -50,14 +50,14 @@
                                 <div style="margin-top: 10px">
                                     <label>
                                         Tags<br />
-                                        <input type="text" class="textbox" style="width: 75%" bind="@tags" placeholder="Tags, to use ',' to split multi tags." />
+                                        <input id="textbox-post-tags" type="text" class="textbox" style="width: 75%" bind="@tags" placeholder="Tags, to use ',' to split multi tags." />
                                     </label>
                                 </div>
                                 <div style="margin-top: 10px">
                                     <label>
                                         Is Page?
                                         <br />
-                                        <select bind="@post.IsPage" class="textbox">
+                                        <select id="list-post-is-page" bind="@post.IsPage" class="textbox">
                                             <option value="false">No</option>
                                             <option value="true">Yes</option>
                                         </select>
@@ -66,11 +66,11 @@
                                 <div style="margin-top: 15px">
                                     @if (string.IsNullOrEmpty(id))
                                     {
-                                        <a class="button" onclick="@PutPostAsync">Create Post</a>
+                                        <a id="button-post-submit" class="button" onclick="@PutPostAsync">Create Post</a>
                                     }
                                     else
                                     {
-                                        <a class="button" onclick="@PatchPostAsync">Save</a>
+                                        <a id="button-post-submit" class="button" onclick="@PatchPostAsync">Save</a>
                                     }
                                 </div>
                             </div>
