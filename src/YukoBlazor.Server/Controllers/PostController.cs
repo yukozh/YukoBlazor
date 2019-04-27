@@ -55,10 +55,11 @@ namespace YukoBlazor.Server.Controllers
             var dataCount = await query.CountAsync();
             var pageCount = (dataCount + PageSize - 1) / PageSize;
             var data = await query
-                    .OrderByDescending(x => x.Time)
-                    .Skip((page - 1) * PageSize)
-                    .Take(PageSize)
-                    .ToListAsync(token);
+                .OrderByDescending(x => x.IsFeatured)
+                .ThenByDescending(x => x.Time)
+                .Skip((page - 1) * PageSize)
+                .Take(PageSize)
+                .ToListAsync(token);
 
             return Json(new PagedViewModel<PostViewModel>
             {
@@ -74,7 +75,8 @@ namespace YukoBlazor.Server.Controllers
                     Time = x.Time,
                     Title = x.Title,
                     Url = x.Url,
-                    IsPage = x.IsPage
+                    IsPage = x.IsPage,
+                    IsFeatured = x.IsFeatured
                 })
             });
         }
@@ -105,7 +107,8 @@ namespace YukoBlazor.Server.Controllers
                     Time = post.Time,
                     Title = post.Title,
                     Url = post.Url,
-                    IsPage = post.IsPage
+                    IsPage = post.IsPage,
+                    IsFeatured = post.IsFeatured
                 });
             }
         }
@@ -116,6 +119,7 @@ namespace YukoBlazor.Server.Controllers
             [FromServices] BlogContext db, string url, 
             string catalog, string title, string tags, 
             string content, bool isPage = false, 
+            bool isFeatured = false,
             CancellationToken token = default)
         {
             if (!User.Identity.IsAuthenticated)
@@ -152,6 +156,7 @@ namespace YukoBlazor.Server.Controllers
                 Url = url,
                 CatalogId = catalog,
                 IsPage = isPage,
+                IsFeatured = isFeatured,
                 Tags = tagsList,
                 Content = content,
                 Title = title,
@@ -167,8 +172,8 @@ namespace YukoBlazor.Server.Controllers
         public async Task<IActionResult> Patch(
             [FromServices] BlogContext db, string content,
             string catalog, string title, string tags,
-            string url, string newUrl, bool? isPage = false,
-            CancellationToken token = default)
+            string url, string newUrl, bool? isPage = null,
+            bool? isFeatured = null, CancellationToken token = default)
         {
             if (!User.Identity.IsAuthenticated)
             {
@@ -240,6 +245,11 @@ namespace YukoBlazor.Server.Controllers
             if (isPage.HasValue)
             {
                 post.IsPage = isPage.Value;
+            }
+
+            if (isFeatured.HasValue)
+            {
+                post.IsFeatured = isFeatured.Value;
             }
 
             await db.SaveChangesAsync(token);

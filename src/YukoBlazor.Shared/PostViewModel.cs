@@ -13,5 +13,6 @@ namespace YukoBlazor.Shared
         public Catalog Catalog { get; set; }
         public string Url { get; set; }
         public bool IsPage { get; set; }
+        public bool IsFeatured { get; set; }
     }
 }

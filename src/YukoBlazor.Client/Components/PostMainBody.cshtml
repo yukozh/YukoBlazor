@@ -7,6 +7,10 @@
     <div class="wrapfullpost">
         <div class="post hentry">
             <h2 class="post-title entry-title">
+                @if (PostModel.IsFeatured)
+                {
+                    <span class="featured">FEATURED</span>
+                }
                 <a href="/post/@PostModel.Url">@PostModel.Title</a>
             </h2>
             <div class="postmeta-primary">

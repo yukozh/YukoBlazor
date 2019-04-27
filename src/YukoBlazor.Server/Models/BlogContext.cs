@@ -38,6 +38,7 @@ namespace YukoBlazor.Server.Models
 
             builder.Entity<Post>(e =>
             {
+                e.HasIndex(x => x.IsFeatured);
                 e.HasIndex(x => x.IsPage);
                 e.HasIndex(x => x.Time);
                 e.HasIndex(x => x.Url).IsUnique();

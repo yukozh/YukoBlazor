@@ -55,9 +55,19 @@
                                 </div>
                                 <div style="margin-top: 10px">
                                     <label>
+                                        Is Featured?
+                                        <br />
+                                        <select id="list-post-is-featured" bind="@isFeatured" class="textbox">
+                                            <option value="false">No</option>
+                                            <option value="true">Yes</option>
+                                        </select>
+                                    </label>
+                                </div>
+                                <div style="margin-top: 10px">
+                                    <label>
                                         Is Page?
                                         <br />
-                                        <select id="list-post-is-page" bind="@post.IsPage" class="textbox">
+                                        <select id="list-post-is-page" bind="@isPage" class="textbox">
                                             <option value="false">No</option>
                                             <option value="true">Yes</option>
                                         </select>
@@ -76,13 +86,11 @@
                             </div>
                         </div>
                     </div>
-
                 </div>
             </div>
         </div>
     </div>
 }
-
 
 @functions
 {
@@ -94,12 +102,14 @@
 
     string catalogId = "";
     string tags = "";
+    string isPage;
+    string isFeatured;
 
     private async Task PatchPostAsync()
     {
         await API.PatchPostAsync(
             oldUrl, post.Url, post.Title, await GetEditorValueAsync("txtPost"),
-            catalogId, tags, post.IsPage);
+            catalogId, tags, Convert.ToBoolean(isPage), Convert.ToBoolean(isFeatured));
         State.TriggerTagsUpdate();
         UriHelper.NavigateTo($"/post/{post.Url}");
     }
@@ -108,7 +118,7 @@
     {
         await API.PutPostAsync(
             post.Url, post.Title, await GetEditorValueAsync("txtPost"),
-            catalogId, tags, post.IsPage);
+            catalogId, tags, Convert.ToBoolean(isPage), Convert.ToBoolean(isFeatured));
 
         State.TriggerTagsUpdate();
         UriHelper.NavigateTo($"/post/{post.Url}");
@@ -123,6 +133,8 @@
             post = await API.GetPostAsync(id);
             tags = post.Tags == null ? "" : string.Join(", ", post.Tags);
             catalogId = post.Catalog?.Id;
+            isPage = post.IsPage ? "true" : "false";
+            isFeatured = post.IsFeatured ? "true" : "false";
         }
         else
         {

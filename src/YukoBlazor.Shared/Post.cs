@@ -23,6 +23,8 @@ namespace YukoBlazor.Shared
 
         public bool IsPage { get; set; }
 
+        public bool IsFeatured { get; set; }
+
         [ForeignKey("Catalog")]
         public string CatalogId { get; set; }
 

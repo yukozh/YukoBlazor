@@ -3345,3 +3345,14 @@ p code {
     padding: 2px 5px;
     border-radius: 5px;
 }
+
+.featured {
+    font-size: 14px;
+    background: #ffa902;
+    color: #fff;
+    padding: 5px 10px;
+    float: left;
+    height: 20px;
+    line-height: 20px;
+    margin: 5px 10px 5px 0;
+}

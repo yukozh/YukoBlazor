@@ -53,7 +53,8 @@ namespace YukoBlazor.ApiInvoker
 
         public async Task<Guid> PutPostAsync(
             string url, string title, string content, string catalog = null, 
-            string tags = null, bool isPage = false, CancellationToken token = default)
+            string tags = null, bool isPage = false, bool isFeatured = false,
+            CancellationToken token = default)
         {
             using (var httpContent = new FormUrlEncodedContent(new Dictionary<string, string>
             {
@@ -61,7 +62,8 @@ namespace YukoBlazor.ApiInvoker
                 { "content", content },
                 { "tags", tags },
                 { "catalog", catalog },
-                { "isPage", isPage ? "true" : "false" }
+                { "isPage", isPage ? "true" : "false" },
+                { "isFeatured", isFeatured ? "true" : "false" }
             }))
             using (var response = await client.PutAsync(
                 $"/api/Post/{url}",
@@ -88,8 +90,8 @@ namespace YukoBlazor.ApiInvoker
 
         public async Task PatchPostAsync(
             string url, string newUrl = null, string title = null, string content = null,
-            string catalog = null, string tags = null, bool? isPage = false,
-            CancellationToken token = default)
+            string catalog = null, string tags = null, bool? isPage = null,
+            bool? isFeatured = null, CancellationToken token = default)
         {
             var dictionary = new Dictionary<string, string>();
 
@@ -121,6 +123,11 @@ namespace YukoBlazor.ApiInvoker
             if (isPage.HasValue)
             {
                 dictionary.Add("isPage", isPage.ToString());
+            }
+
+            if (isFeatured.HasValue)
+            {
+                dictionary.Add("isFeatured", isFeatured.ToString());
             }
 
             using (var httpContent = new FormUrlEncodedContent(dictionary))
