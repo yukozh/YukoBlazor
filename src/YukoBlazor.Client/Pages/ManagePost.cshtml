@@ -135,6 +135,7 @@
             catalogId = post.Catalog?.Id;
             isPage = post.IsPage ? "true" : "false";
             isFeatured = post.IsFeatured ? "true" : "false";
+            StateHasChanged();
         }
         else
         {
