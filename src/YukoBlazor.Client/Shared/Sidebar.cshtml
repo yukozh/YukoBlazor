@@ -1,4 +1,5 @@
-﻿@inject ApiClient API
+﻿@using System.Web
+@inject ApiClient API
 @inject IdentityContainer ID
 @inject AppState State
 
@@ -38,7 +39,7 @@
                         @foreach (var x in tags)
                         {
                             <li>
-                                <a dir="ltr" href="/tag/@x.Title">@x.Title (@x.Count)</a>
+                                <a dir="ltr" href="/tag/@HttpUtility.UrlEncode(x.Title)">@x.Title (@x.Count)</a>
                             </li>
                         }
                     </ul>

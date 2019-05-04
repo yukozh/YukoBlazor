@@ -1,4 +1,5 @@
-﻿@using Pomelo.Marked
+﻿@using System.Web
+@using Pomelo.Marked
 @inject ApiClient API
 @inject IdentityContainer ID
 @inject Microsoft.AspNetCore.Components.Services.IUriHelper UriHelper
@@ -31,7 +32,7 @@
                         <i class="fa fa-tags"></i>
                         @foreach (var x in PostModel.Tags)
                         {
-                            <a href="/tag/@x" rel="tag">@x</a>
+                            <a href="/tag/@HttpUtility.UrlEncode(x)" rel="tag">@x</a>
                         }
                     </span>
                 }
