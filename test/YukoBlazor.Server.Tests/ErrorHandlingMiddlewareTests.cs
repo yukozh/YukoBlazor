@@ -25,7 +25,7 @@ namespace YukoBlazor.Server.Tests
                 .SetupSet(x => x.ContentType)
                 .Callback(val => contentType = val);
             fakeResponse
-                .SetupGet(x => x.BodyPipe)
+                .SetupGet(x => x.BodyWriter)
                 .Returns(new StreamPipeWriter(stream));
             fakeResponse
                 .SetupGet(x => x.Body)
