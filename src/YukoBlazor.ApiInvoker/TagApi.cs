@@ -11,7 +11,7 @@ namespace YukoBlazor.ApiInvoker
         public async Task<IEnumerable<TagViewModel>> GetTagsAsync(
             CancellationToken token = default)
         {
-            return await client.GetJsonAsync<IEnumerable<TagViewModel>>("/api/Tag");
+            return await client.GetJsonAsync<IEnumerable<TagViewModel>>("api/Tag");
         }
     }
 }

@@ -11,7 +11,7 @@ namespace YukoBlazor.ApiInvoker
         public async Task<IEnumerable<CalendarViewModel>> GetCalendarAsync(
             CancellationToken token = default)
         {
-            return await client.GetJsonAsync<IEnumerable<CalendarViewModel>>("/api/Calendar");
+            return await client.GetJsonAsync<IEnumerable<CalendarViewModel>>("api/Calendar");
         }
     }
 }

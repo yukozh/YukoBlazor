@@ -43,12 +43,12 @@ namespace YukoBlazor.ApiInvoker
                 conditionBuilder.Append($"&title={HttpUtility.UrlEncode(search)}");
             }
 
-            return await client.GetJsonAsync<PagedViewModel<PostViewModel>>("/api/Post/" + conditionBuilder.ToString());
+            return await client.GetJsonAsync<PagedViewModel<PostViewModel>>("api/Post/" + conditionBuilder.ToString());
         }
 
         public async Task<PostViewModel> GetPostAsync(string url, CancellationToken token = default)
         {
-            return await client.GetJsonAsync<PostViewModel>($"/api/Post/{url}");
+            return await client.GetJsonAsync<PostViewModel>($"api/Post/{url}");
         }
 
         public async Task<Guid> PutPostAsync(
@@ -66,7 +66,7 @@ namespace YukoBlazor.ApiInvoker
                 { "isFeatured", isFeatured ? "true" : "false" }
             }))
             using (var response = await client.PutAsync(
-                $"/api/Post/{url}",
+                $"api/Post/{url}",
                 httpContent,
                 token))
             {
@@ -132,7 +132,7 @@ namespace YukoBlazor.ApiInvoker
 
             using (var httpContent = new FormUrlEncodedContent(dictionary))
             using (var response = await client.PatchAsync(
-                $"/api/Post/{url}",
+                $"api/Post/{url}",
                 httpContent,
                 token))
             {
@@ -153,7 +153,7 @@ namespace YukoBlazor.ApiInvoker
             string url, CancellationToken token = default)
         {
             using (var response = await client.DeleteAsync(
-                $"/api/Post/{url}",
+                $"api/Post/{url}",
                 token))
             {
                 if (response.StatusCode == HttpStatusCode.Forbidden)

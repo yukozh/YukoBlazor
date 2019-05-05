@@ -16,7 +16,7 @@ namespace YukoBlazor.ApiInvoker
         public async Task<IEnumerable<CommentViewModel>> GetCommentsAsync(
             Guid id, CancellationToken token = default)
         {
-            return await client.GetJsonAsync<IEnumerable<CommentViewModel>>("/api/Comment/" + id);
+            return await client.GetJsonAsync<IEnumerable<CommentViewModel>>("api/Comment/" + id);
         }
 
         public async Task<Guid> PutCommentAsync(
@@ -43,7 +43,7 @@ namespace YukoBlazor.ApiInvoker
                 { "email", email }
             }))
             using (var response = await client.PostAsync(
-                $"/api/Comment/{id}",
+                $"api/Comment/{id}",
                 httpContent,
                 token))
             {
@@ -64,7 +64,7 @@ namespace YukoBlazor.ApiInvoker
             Guid id, CancellationToken token = default)
         {
             using (var response = await client.DeleteAsync(
-                $"/api/Comment/{id}",
+                $"api/Comment/{id}",
                 token))
             {
                 if (response.StatusCode == HttpStatusCode.Forbidden)

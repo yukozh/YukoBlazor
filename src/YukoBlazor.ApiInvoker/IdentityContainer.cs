@@ -40,7 +40,7 @@ namespace YukoBlazor.ApiInvoker
             string username, string password, CancellationToken token = default)
         {
             RemoveIdentity();
-            if (await client.GetStringAsync($"/api/State?usr={username}&pwd={password}") == "Authenticated")
+            if (await client.GetStringAsync($"api/State?usr={username}&pwd={password}") == "Authenticated")
             {
                 client.DefaultRequestHeaders.Add("Authorization", $"Yuko {username} {password}");
                 state.TriggerStateChange();

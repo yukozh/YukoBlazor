@@ -28,15 +28,20 @@ namespace YukoBlazor.Server
         public async void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             app.UseResponseCompression();
-
             app.UseErrorHandlingMiddleware();
-            app.UseBlazorDebugging();
+
             if (env.IsDevelopment())
             {
+                app.UseBlazorDebugging();
             }
 
             app.UseAuthentication();
-            app.UseMvcWithDefaultRoute();
+            app.UseRouting();
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapDefaultControllerRoute();
+            });
+
             app.UseBlazor<Client.Startup>();
 
             using (var serviceScope = app.ApplicationServices.CreateScope())

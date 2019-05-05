@@ -15,7 +15,7 @@ namespace YukoBlazor.ApiInvoker
         public async Task<IEnumerable<CatalogViewModel>> GetCatalogsAsync(
             CancellationToken token = default)
         {
-            return await client.GetJsonAsync<IEnumerable<CatalogViewModel>>("/api/Catalog");
+            return await client.GetJsonAsync<IEnumerable<CatalogViewModel>>("api/Catalog");
         }
 
         public async Task PutCatalogAsync(
@@ -27,7 +27,7 @@ namespace YukoBlazor.ApiInvoker
                 { "priority", priority.ToString() }
             }))
             using (var response = await client.PostAsync(
-                $"/api/Catalog/{url}",
+                $"api/Catalog/{url}",
                 content,
                 token))
             {
@@ -63,7 +63,7 @@ namespace YukoBlazor.ApiInvoker
             var content = new FormUrlEncodedContent(dictionary);
 
             using (var response = await client.PatchAsync(
-                $"/api/Catalog/{url}",
+                $"api/Catalog/{url}",
                 content,
                 token))
             {
@@ -84,7 +84,7 @@ namespace YukoBlazor.ApiInvoker
             string url, CancellationToken token = default)
         {
             using (var response = await client.DeleteAsync(
-                $"/api/Catalog/{url}",
+                $"api/Catalog/{url}",
                 token))
             {
                 if (response.StatusCode == HttpStatusCode.Forbidden)
